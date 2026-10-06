@@ -1,0 +1,3614 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-06T20:40:53.205744+00:00",
+  "scope": "Documentation of archived completed statistics; no fitting/resampling/recalculation or change of original families.",
+  "main_text_proposal": "EEG endpoints were summarized within participant before equal-participant averaging. Paired, two-sided percentile bootstrap intervals used 10,000 participant resamples for the main results and subsequent extensions; the earlier continual-information stage used 5,000. Resampling preserved paired conditions while fitted models, shared teachers and realized donor assignments remained fixed. The 2.5th and 97.5th percentiles define the original descriptive 95% intervals. Three original two-comparison families retain Bonferroni-adjusted 97.5% intervals (1.25th and 98.75th percentiles): the two Lee common-history future-AUC contrasts in 42 participants, and the other-versus-own and mixed-versus-own future-BA contrasts separately in Stieger 62 and Farabbi 12. Remaining comparisons retain their original descriptive 95% interpretation; the nested 41-person Stieger cohort is not an independent replication. The joint retention criterion requires both its predefined future-performance lower-bound criterion and its old-loss-proportion upper-bound criterion. Stage-specific seeds, exact resampling rules and archived software records are listed in the reproducibility record.",
+  "global_rules": {
+    "paired_units": "EEG participant; simulation trajectory. Folds, sessions, shuffle allocations and proposal seeds are not additional independent units.",
+    "conditioning": "Fixed fitted/shared models, teachers and realized donor assignments; no uncertainty for repeating shared training or drawing a new donor pool.",
+    "quantile_sidedness": "All registered participant intervals are two-sided, linear percentile intervals.",
+    "family_scope": "Only the explicitly identified original two-comparison families are adjusted; independent development/confirmation identities do not transform every endpoint into a confirmatory family.",
+    "joint_retention": {
+      "future_difference": "constrained minus unconstrained own future BA",
+      "future_requirement": "lower endpoint of original two-sided95% interval >= -0.005",
+      "old_loss": "final permanent-old BA at least0.05 below each model own initial permanent-old BA",
+      "old_loss_comparison": "constrained minus own loss proportion",
+      "old_loss_requirement": "upper endpoint of original two-sided95% interval <0",
+      "both_required": true,
+      "interpretation": "Original operational development criterion in Stieger. Passing only future component does not establish joint success; an interval crossing zero is not evidence of no effect.",
+      "evidence": [
+        {
+          "source": "experiments/feedback_retention_v3/eeg/analyze.py",
+          "line": 94,
+          "contains": "future_pass=dual"
+        },
+        {
+          "source": "experiments/confirmation_prior_constraints_v4/confirmation/analyze.py",
+          "line": 45,
+          "contains": "future_margin"
+        }
+      ]
+    },
+    "threshold_sensitivity": "Saved-score any/2/5/10pp counts introduce no new bootstrap or thresholds replacing primary5pp. The finite old tests make individual score classifications coarse.",
+    "software": "No current installed-version query used to fill historical gaps."
+  },
+  "participant_analyses": [
+    {
+      "id": "lee_original",
+      "label": "Lee original-event ERP",
+      "manuscript_scope": "Main results and appendix",
+      "participants": "12 development /42 excluded from development /54 combined descriptive",
+      "comparisons": "True-pair/control omitted-feature error; mapped and label-only task endpoints",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 20261003,
+        "rng_rule": "default_rng(seed); shared integer indices (10000,n) within group",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "The42-person group was excluded from development, but the original-event intervals explicitly remain descriptive95%. This is distinct from the common-history event set. Five within-class shuffle allocations are averaged within person, not treated as independent samples.",
+      "source_evidence": [
+        {
+          "source": "experiments/lee2019_erp_history_v1/pilot_run.py",
+          "line": 140,
+          "contains": "def aggregate"
+        }
+      ],
+      "protocols": [
+        "experiments/lee2019_erp_history_v1/protocol.json"
+      ],
+      "freezes": [
+        "experiments/lee2019_erp_history_v1/protocol_freeze.json",
+        "experiments/lee2019_erp_history_v1/execution_freeze.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/lee2019_erp_history_v1/results/verification_pilot.json",
+          "recorded_status": {
+            "status": "PASS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "lee_history",
+      "label": "Lee common-history ERP",
+      "manuscript_scope": "Appendix",
+      "participants": "12 development /42 confirmation /54 combined descriptive",
+      "comparisons": "Label-updated ordered-timing minus current-timing and minus mean five shuffled-timing future AUC; remaining controls",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 20261005,
+        "rng_rule": "default_rng(20261005); one shared integer matrix (10000,n) for each group",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": {
+        "comparisons": "42-person common-history group: ordered-timing minus current-timing; ordered-timing minus average five shuffled-timing; future label-updated AUC",
+        "family_size": 2,
+        "confidence": 0.975,
+        "quantiles": [
+          0.0125,
+          0.9875
+        ],
+        "adjustment": "Original Bonferroni two-comparison family at family alpha0.05; no new family created by this audit."
+      },
+      "notes": "Only the two primary future-AUC contrasts in the42-person group use97.5%; other endpoints/groups retain95%.",
+      "source_evidence": [
+        {
+          "source": "experiments/lee2019_erp_history_v1/run_history.py",
+          "line": 154,
+          "contains": "draws=np.random.default_rng(20261005)"
+        }
+      ],
+      "protocols": [
+        "experiments/lee2019_erp_history_v1/protocol.json"
+      ],
+      "freezes": [
+        "experiments/lee2019_erp_history_v1/execution_freeze.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/lee2019_erp_history_v1/results/verification_history.json",
+          "recorded_status": {
+            "status": "PASS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "lee_diagnostics",
+      "label": "Lee development diagnostics",
+      "manuscript_scope": "Appendix",
+      "participants": "12",
+      "comparisons": "Common/spatial omitted-feature skill and task/teacher diagnostics",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 20261004,
+        "rng_rule": "default_rng(20261004); shared (10000,12) participant indices",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Only summaries that have archived intervals use this bootstrap; ratios/correlations reported as descriptive means are not assigned new intervals. Development diagnostics do not establish the mechanism of the42-person result.",
+      "source_evidence": [
+        {
+          "source": "experiments/lee2019_erp_diagnostics_v1/run.py",
+          "line": 212,
+          "contains": "draws=np.random.default_rng(20261004)"
+        }
+      ],
+      "protocols": [
+        "experiments/lee2019_erp_diagnostics_v1/protocol.json"
+      ],
+      "freezes": [],
+      "verification": [
+        {
+          "source": "experiments/lee2019_erp_diagnostics_v1/results/verification.json",
+          "recorded_status": {
+            "status": "PASS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "yang_joint_original",
+      "label": "Yang original joint-update replication",
+      "manuscript_scope": "Appendix",
+      "participants": "51",
+      "comparisons": "Original joint task/mapping-update contrasts",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 20261003,
+        "rng_rule": "default_rng(seed) reset per metric; valid paired participants; integer matrix (10000,n)",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "This is a distinct estimator/stage from the subsequent ridge mapping-only controls.",
+      "source_evidence": [
+        {
+          "source": "experiments/yang2025_replication_v1/results/analyzer.executed.py",
+          "line": 33,
+          "contains": "def paired("
+        }
+      ],
+      "protocols": [
+        "experiments/yang2025_replication_v1/protocol.json"
+      ],
+      "freezes": [
+        "experiments/yang2025_replication_v1/freeze_manifest.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/yang2025_replication_v1/results/verification/run_verification.json",
+          "recorded_status": {
+            "status": "PASS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "continual_eeg",
+      "label": "Early continual-information EEG",
+      "manuscript_scope": "Appendix historical exploratory stage",
+      "participants": "62 /nested41",
+      "comparisons": "Personal/shared updates and task/structural endpoint contrasts",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 5000,
+        "seed": 20261002,
+        "rng_rule": "default_rng(seed); shared integer indices (5000,n) per contrast",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Archived stage uses5000 resamples, not10000. Models remain fixed.",
+      "source_evidence": [
+        {
+          "source": "experiments/continual_information_v1/eeg/results/analyzer.executed.py",
+          "line": 30,
+          "contains": "def contrast("
+        }
+      ],
+      "protocols": [
+        "experiments/continual_information_v1/protocol.json"
+      ],
+      "freezes": [],
+      "verification": [
+        {
+          "source": "experiments/continual_information_v1/verification/eeg_verification.json",
+          "recorded_status": {
+            "status": "PASS_ARTIFACT_MATH_AND_PROTOCOL_CHECKS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "mechanisms_initial",
+      "label": "Initial-readout diagnostics",
+      "manuscript_scope": "Appendix",
+      "participants": "Stieger62 /nested41 /Yang51",
+      "comparisons": "Initial-readout diagnostics",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 20261004,
+        "rng_rule": "default_rng(seed).choice(paired differences,(10000,n),replace=True)",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Exploratory data reuse. Shuffle allocations are sensitivity replicates; five shuffle outcomes are averaged within person for the pairing comparator.",
+      "source_evidence": [
+        {
+          "source": "experiments/information_mechanisms_v2/results/initial_refined/runner.executed.py",
+          "line": 64,
+          "contains": "def bootstrap("
+        }
+      ],
+      "protocols": [
+        "experiments/information_mechanisms_v2/protocol.json"
+      ],
+      "freezes": [
+        "experiments/information_mechanisms_v2/freeze_manifest.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/information_mechanisms_v2/results/initial_refined/verification.json",
+          "recorded_status": {
+            "status": "PASS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "mechanisms_pairing",
+      "label": "Ridge true-pair/mismatch controls",
+      "manuscript_scope": "Appendix",
+      "participants": "Stieger62 /nested41 /Yang51",
+      "comparisons": "Ridge true-pair/mismatch controls",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 20261004,
+        "rng_rule": "default_rng(20261004) reset per contrast/metric; integer indices (10000,n)",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Exploratory data reuse. Shuffle allocations are sensitivity replicates; five shuffle outcomes are averaged within person for the pairing comparator.",
+      "source_evidence": [
+        {
+          "source": "experiments/information_mechanisms_v2/pairing/summarize.py",
+          "line": 38,
+          "contains": "rng = np.random.default_rng(20261004)"
+        }
+      ],
+      "protocols": [
+        "experiments/information_mechanisms_v2/protocol.json"
+      ],
+      "freezes": [
+        "experiments/information_mechanisms_v2/freeze_manifest.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/information_mechanisms_v2/results/pairing/verification.json",
+          "recorded_status": {
+            "status": "PASS_INDEPENDENT_PAIRING_RECONSTRUCTION"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "mechanisms_history",
+      "label": "Stieger/Yang history diagnostics",
+      "manuscript_scope": "Appendix",
+      "participants": "Stieger62 /nested41 /Yang51",
+      "comparisons": "Stieger/Yang history diagnostics",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026100504,
+        "rng_rule": "default_rng(2026100504) created per contrast collection; sequential draws across ordered contrasts/metrics",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Exploratory data reuse. Shuffle allocations are sensitivity replicates; five shuffle outcomes are averaged within person for the pairing comparator.",
+      "source_evidence": [
+        {
+          "source": "experiments/information_mechanisms_v2/history/run_history.py",
+          "line": 96,
+          "contains": "rng = np.random.default_rng(2026100504)"
+        }
+      ],
+      "protocols": [
+        "experiments/information_mechanisms_v2/protocol.json"
+      ],
+      "freezes": [
+        "experiments/information_mechanisms_v2/freeze_manifest.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/information_mechanisms_v2/results/history/verification.json",
+          "recorded_status": {
+            "status": "PASS_MATH_CAUSAL_TIMING_AND_SUMMARIES"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "budget",
+      "label": "Label-budget and calibration policies",
+      "manuscript_scope": "Main and appendix",
+      "participants": "62 /nested41",
+      "comparisons": "25% minus0% feedback;100% minus0%; final old score minus own initialization",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026100511,
+        "rng_rule": "default_rng(SeedSequence([seed,cohort_index,n,*sorted_person_ids])); shared (10000,n) indices",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Main future benefit uses25% versus0%; old-test change uses each model own initialization. These are different reference contrasts.",
+      "source_evidence": [
+        {
+          "source": "experiments/reliability_budget_v1/eeg/analyze.py",
+          "line": 13,
+          "contains": "SEED="
+        }
+      ],
+      "protocols": [
+        "experiments/reliability_budget_v1/eeg/protocol_fragment.json",
+        "experiments/reliability_budget_v1/protocol.json"
+      ],
+      "freezes": [
+        "experiments/reliability_budget_v1/freeze_manifest.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/reliability_budget_v1/verification/eeg_analysis.json",
+          "recorded_status": {
+            "status": "PASS_INDEPENDENT_EEG_ANALYSIS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "output_penalty",
+      "label": "Output-penalty retention",
+      "manuscript_scope": "Appendix",
+      "participants": "62 /nested41",
+      "comparisons": "Output-penalty versus own update; future and old-loss endpoints",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026100611,
+        "rng_rule": "default_rng(SeedSequence([seed,cohort_index,n,*sorted_person_ids])); shared (10000,n) indices",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Exploratory reused Stieger development data.",
+      "source_evidence": [
+        {
+          "source": "experiments/reliability_followup_v2/eeg/analyze.py",
+          "line": 11,
+          "contains": "SEED="
+        }
+      ],
+      "protocols": [
+        "experiments/reliability_followup_v2/eeg/protocol_fragment.json",
+        "experiments/reliability_followup_v2/protocol.json"
+      ],
+      "freezes": [
+        "experiments/reliability_followup_v2/freeze_manifest.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/reliability_followup_v2/verification/eeg_analysis.json",
+          "recorded_status": {
+            "status": "PASS_INDEPENDENT_EEG_V2_ANALYSIS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "source_line",
+      "label": "Feedback source and line constraint",
+      "manuscript_scope": "Main and appendix",
+      "participants": "62 /nested41",
+      "comparisons": "Other minus own; mixed minus own; line constraint minus own; replay controls",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026100711,
+        "rng_rule": "default_rng(SeedSequence([seed,cohort_index,n,*sorted_person_ids])); shared (10000,n) indices",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": {
+        "comparisons": "Stieger all62 future BA: other minus own and mixed minus own",
+        "family_size": 2,
+        "confidence": 0.975,
+        "quantiles": [
+          0.0125,
+          0.9875
+        ],
+        "adjustment": "Original Bonferroni two-comparison family at family alpha0.05; no new family created by this audit."
+      },
+      "notes": "Family correction applies only to all62 future BA source contrasts. Nested41 and all other endpoints are descriptive95%. Donor assignments and teachers remain fixed. Original line CI uses this stage seed, not the v4 reference reanalysis seed.",
+      "source_evidence": [
+        {
+          "source": "experiments/feedback_retention_v3/eeg/analyze.py",
+          "line": 11,
+          "contains": "SEED="
+        }
+      ],
+      "protocols": [
+        "experiments/feedback_retention_v3/eeg/protocol_fragment.json",
+        "experiments/feedback_retention_v3/protocol.json"
+      ],
+      "freezes": [
+        "experiments/feedback_retention_v3/freeze_manifest.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/feedback_retention_v3/verification/eeg_analysis.json",
+          "recorded_status": {
+            "status": "PASS_INDEPENDENT_EEG_V3_ANALYSIS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "fullspace",
+      "label": "Full-space risk constraint",
+      "manuscript_scope": "Main retention table and appendix",
+      "participants": "62 /nested41",
+      "comparisons": "Full-space minus own; full-space minus line; reused references",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026100811,
+        "rng_rule": "default_rng(SeedSequence([seed,cohort_index,n,*sorted_person_ids])); shared (10000,n) indices",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Exploratory Stieger reuse. Both retention criteria retain their original95% intervals. The manuscript original v3 line interval retains its own seed.",
+      "source_evidence": [
+        {
+          "source": "experiments/confirmation_prior_constraints_v4/eeg/analyze.py",
+          "line": 10,
+          "contains": "SEED="
+        }
+      ],
+      "protocols": [
+        "experiments/confirmation_prior_constraints_v4/eeg/PROTOCOL.md",
+        "experiments/confirmation_prior_constraints_v4/eeg/protocol_fragment.json"
+      ],
+      "freezes": [
+        "experiments/confirmation_prior_constraints_v4/freeze_eeg.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/confirmation_prior_constraints_v4/verification/eeg_analysis.json",
+          "recorded_status": {
+            "status": "PASS_INDEPENDENT_EEG_V4_ANALYSIS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "farabbi",
+      "label": "Farabbi source and retention evaluation",
+      "manuscript_scope": "Appendix",
+      "participants": "12",
+      "comparisons": "Other/mixed minus own future BA; line/full-space minus own and each other",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026100821,
+        "rng_rule": "default_rng(SeedSequence([2026100821,n,*subjects])); shared (10000,n) indices",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": {
+        "comparisons": "Farabbi future BA: other minus own and mixed minus own; separate from Stieger family",
+        "family_size": 2,
+        "confidence": 0.975,
+        "quantiles": [
+          0.0125,
+          0.9875
+        ],
+        "adjustment": "Original Bonferroni two-comparison family at family alpha0.05; no new family created by this audit."
+      },
+      "notes": "Only source future-BA contrasts use97.5%. Other endpoints and retention comparisons use95%. Day3 future and permanent day1 old tests are separate endpoints.",
+      "source_evidence": [
+        {
+          "source": "experiments/confirmation_prior_constraints_v4/confirmation/analyze.py",
+          "line": 22,
+          "contains": "draws=np.random.default_rng"
+        }
+      ],
+      "protocols": [
+        "experiments/confirmation_prior_constraints_v4/confirmation/protocol_fragment.json"
+      ],
+      "freezes": [
+        "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/confirmation_prior_constraints_v4/verification/confirmation_analysis.json",
+          "recorded_status": {
+            "status": "PASS_INDEPENDENT_CONFIRMATION_ANALYSIS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "diagnostics_generalization_v5_classification",
+      "label": "Initial-training classification diagnosis",
+      "manuscript_scope": "Appendix training-only development",
+      "participants": "12",
+      "comparisons": "Initial-training classification diagnosis",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026100911,
+        "rng_rule": "default_rng(SeedSequence([seed,n,*sorted_valid_person_ids])); shared paired indices (10000,n)",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Outer-fold predictions are pooled within participant; folds are not independent units. All240 original training labels remain available to model selection, including across dose comparisons.",
+      "source_evidence": [
+        {
+          "source": "experiments/diagnostics_generalization_v5/classification/analyze.py",
+          "line": 18,
+          "contains": "np.random.SeedSequence"
+        }
+      ],
+      "protocols": [
+        "experiments/diagnostics_generalization_v5/classification/protocol_fragment.json"
+      ],
+      "freezes": [
+        "experiments/diagnostics_generalization_v5/freeze_classification.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/diagnostics_generalization_v5/verification/classification_analysis.json",
+          "recorded_status": {
+            "status": "PASS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "diagnostics_generalization_v5_retention",
+      "label": "Initial-training retention diagnosis",
+      "manuscript_scope": "Appendix training-only development",
+      "participants": "62",
+      "comparisons": "Initial-training retention diagnosis",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026100912,
+        "rng_rule": "default_rng(SeedSequence([seed,n,*sorted_valid_person_ids])); shared paired indices (10000,n)",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Outer-fold predictions are pooled within participant before metrics; folds are not independent units. S2/S6 retention snapshots use the same people and draws. Final v6 retention uses R2; original/R1 failures remain archived.",
+      "source_evidence": [
+        {
+          "source": "experiments/diagnostics_generalization_v5/retention/analyze.py",
+          "line": 17,
+          "contains": "np.random.SeedSequence"
+        }
+      ],
+      "protocols": [
+        "experiments/diagnostics_generalization_v5/retention/protocol_fragment.json"
+      ],
+      "freezes": [
+        "experiments/diagnostics_generalization_v5/freeze_retention.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/diagnostics_generalization_v5/verification/retention_analysis.json",
+          "recorded_status": {
+            "status": "PASS_INDEPENDENT_RETENTION_ANALYSIS_V5"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "closure_controls_v6_classification",
+      "label": "Expanded-regularization control",
+      "manuscript_scope": "Appendix training-only development",
+      "participants": "12",
+      "comparisons": "Expanded-regularization control",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026101011,
+        "rng_rule": "default_rng(SeedSequence([seed,n,*sorted_valid_person_ids])); shared paired indices (10000,n)",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Outer-fold predictions are pooled within participant; folds are not independent units. All240 original training labels remain available to model selection, including across dose comparisons.",
+      "source_evidence": [
+        {
+          "source": "experiments/closure_controls_v6/classification/analyze.py",
+          "line": 14,
+          "contains": "np.random.SeedSequence"
+        }
+      ],
+      "protocols": [
+        "experiments/closure_controls_v6/classification/protocol_fragment.json"
+      ],
+      "freezes": [
+        "experiments/closure_controls_v6/freeze_classification.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/closure_controls_v6/verification/classification_analysis.json",
+          "recorded_status": {
+            "status": "PASS_INDEPENDENT_CLASSIFICATION_ANALYSIS_V6"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "closure_controls_v6_retention",
+      "label": "Replay/radius controls final R2",
+      "manuscript_scope": "Appendix training-only development",
+      "participants": "62",
+      "comparisons": "Replay/radius controls final R2",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026101012,
+        "rng_rule": "default_rng(SeedSequence([seed,n,*sorted_valid_person_ids])); shared paired indices (10000,n)",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Outer-fold predictions are pooled within participant before metrics; folds are not independent units. S2/S6 retention snapshots use the same people and draws. Final v6 retention uses R2; original/R1 failures remain archived.",
+      "source_evidence": [
+        {
+          "source": "experiments/closure_controls_v6/revisions/retention_r2/analyze.py",
+          "line": 18,
+          "contains": "np.random.SeedSequence"
+        }
+      ],
+      "protocols": [
+        "experiments/closure_controls_v6/revisions/retention_r2/protocol_fragment.json"
+      ],
+      "freezes": [
+        "experiments/closure_controls_v6/freeze_retention_r2.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/closure_controls_v6/verification/retention_analysis.json",
+          "recorded_status": {
+            "status": "PASS_INDEPENDENT_RETENTION_V6_ANALYSIS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    },
+    {
+      "id": "reliability_reference",
+      "label": "Finite correctness/persistence reference",
+      "manuscript_scope": "Appendix",
+      "participants": "62 /qualified29 /nested41 /nested qualified19",
+      "comparisons": "Four arms and fixed factorial contrasts",
+      "statistical_unit": "participant",
+      "aggregation": "Equal participant weights; paired within-participant differences. Repeated session metrics are first averaged within participant; training-only outer-fold predictions are pooled within person before metrics.",
+      "interval": {
+        "method": "two-sided percentile participant bootstrap",
+        "replicates": 10000,
+        "seed": 2026101111,
+        "rng_rule": "Generator(PCG64DXSM(SeedSequence([bootstrap_seed,group_code])));10000 group_n indices; codes0/1/2/3",
+        "default_confidence": 0.95,
+        "default_quantiles": [
+          0.025,
+          0.975
+        ],
+        "quantile_method": "linear (explicit or NumPy default)",
+        "default_inference_scope": "Original descriptive/exploratory intervals, without multiple-comparison correction."
+      },
+      "original_adjusted_family": null,
+      "notes": "Participant intervals use fixed person-specific finite-model probabilities, teachers and fitted probability/persistence models. Individual unconditional probabilities have separate Wilson95 Monte Carlo intervals with32768 repetitions. Conditional recovery ratios use actual failure denominators, are per-person descriptive, and are excluded from group bootstrap and paired contrasts. Qualification retains original observed identities.",
+      "source_evidence": [
+        {
+          "source": "experiments/prior_reliability_v7/reliability/analyze.py",
+          "line": 88,
+          "contains": "PCG64DXSM"
+        }
+      ],
+      "protocols": [
+        "experiments/prior_reliability_v7/reliability/protocol_fragment.json"
+      ],
+      "freezes": [
+        "experiments/prior_reliability_v7/freeze_reliability.json"
+      ],
+      "verification": [
+        {
+          "source": "experiments/prior_reliability_v7/verification/reliability_analysis.json",
+          "recorded_status": {
+            "status": "PASS_INDEPENDENT_RELIABILITY_V7_ANALYSIS"
+          },
+          "audit_scope": "Read archived independent verification; not rerun here."
+        }
+      ]
+    }
+  ],
+  "simulation_analyses": [
+    {
+      "id": "continual_information_v1",
+      "statistical_unit": "trajectory",
+      "n": 512,
+      "interval": "two-sided normal Monte Carlo: mean +/-confidence_multiplier*sample_sd(ddof=1)/sqrt(n)",
+      "resampling": null,
+      "multiplicity": "Descriptive, no multiplicity adjustment",
+      "notes": "Known-data base seed; unknown-data seed+100; true candidate allocation seed+101.",
+      "recorded_seeds": {
+        "seed": 2026100201
+      },
+      "confidence_multiplier": 1.959963984540054,
+      "evidence": [
+        {
+          "source": "experiments/continual_information_v1/dynamics/run_dynamics.py",
+          "line": 210,
+          "contains": "def summarize("
+        }
+      ],
+      "protocol": "experiments/continual_information_v1/dynamics/config.json",
+      "verification": {
+        "source": "experiments/continual_information_v1/verification/dynamics_verification.json",
+        "recorded_status": {
+          "status": "PASS_ARTIFACT_MATH_AND_PROTOCOL_CHECKS"
+        },
+        "audit_scope": "Read archived independent verification; not rerun here."
+      }
+    },
+    {
+      "id": "reliability_budget_v1",
+      "statistical_unit": "trajectory",
+      "n": 512,
+      "interval": "two-sided pointwise descriptive normal Monte Carlo: mean +/-1.959963984540054*sample_sd(ddof=1)/sqrt(n)",
+      "paired_rule": "Compute within-trajectory differences. For repeated proposal seeds, average seeds within trajectory before the interval.",
+      "resampling": null,
+      "multiplicity": "No multiplicity adjustment or selection by interval significance.",
+      "notes": "All21 conditions; original three-step failure rule.",
+      "recorded_seeds": {
+        "seed": 2026100502
+      },
+      "evidence": [
+        {
+          "source": "experiments/reliability_budget_v1/dynamics/analyze.py",
+          "line": 15,
+          "contains": "def "
+        }
+      ],
+      "protocol": "experiments/reliability_budget_v1/results/dynamics/protocol.executed.json",
+      "freeze": "experiments/reliability_budget_v1/freeze_manifest.json",
+      "verification": {
+        "source": "experiments/reliability_budget_v1/verification/dynamics_analysis.json",
+        "recorded_status": {
+          "status": "PASS_INDEPENDENT_DYNAMICS_ANALYSIS"
+        },
+        "audit_scope": "Read archived independent verification; not rerun here."
+      }
+    },
+    {
+      "id": "reliability_followup_v2",
+      "statistical_unit": "trajectory",
+      "n": 512,
+      "interval": "two-sided pointwise descriptive normal Monte Carlo: mean +/-1.959963984540054*sample_sd(ddof=1)/sqrt(n)",
+      "paired_rule": "Compute within-trajectory differences. For repeated proposal seeds, average seeds within trajectory before the interval.",
+      "resampling": null,
+      "multiplicity": "No multiplicity adjustment or selection by interval significance.",
+      "notes": "Independent null calibration uses4096 trajectories, seed2026100601 and fixed rank3893. Null validation proportions use Wilson95, not a bootstrap.",
+      "recorded_seeds": {
+        "seed": 2026100602
+      },
+      "evidence": [
+        {
+          "source": "experiments/reliability_followup_v2/dynamics/analyze.py",
+          "line": 14,
+          "contains": "def "
+        }
+      ],
+      "protocol": "experiments/reliability_followup_v2/results/dynamics/protocol.executed.json",
+      "freeze": "experiments/reliability_followup_v2/freeze_manifest.json",
+      "verification": {
+        "source": "experiments/reliability_followup_v2/verification/dynamics_analysis.json",
+        "recorded_status": {
+          "status": "PASS_INDEPENDENT_DYNAMICS_V2_ANALYSIS"
+        },
+        "audit_scope": "Read archived independent verification; not rerun here."
+      }
+    },
+    {
+      "id": "feedback_retention_v3",
+      "statistical_unit": "trajectory",
+      "n": 512,
+      "interval": "two-sided pointwise descriptive normal Monte Carlo: mean +/-1.959963984540054*sample_sd(ddof=1)/sqrt(n)",
+      "paired_rule": "Compute within-trajectory differences. For repeated proposal seeds, average seeds within trajectory before the interval.",
+      "resampling": null,
+      "multiplicity": "No multiplicity adjustment or selection by interval significance.",
+      "notes": "1024-particle sensitivity uses8 fixed paths, kept separate from512 primary paths.",
+      "recorded_seeds": {
+        "seed": 2026100702,
+        "proposal_seed": 2026100703
+      },
+      "evidence": [
+        {
+          "source": "experiments/feedback_retention_v3/dynamics/analyze.py",
+          "line": 13,
+          "contains": "def "
+        }
+      ],
+      "protocol": "experiments/feedback_retention_v3/results/dynamics/protocol.executed.json",
+      "freeze": "experiments/feedback_retention_v3/freeze_manifest.json",
+      "verification": {
+        "source": "experiments/feedback_retention_v3/verification/dynamics_analysis.json",
+        "recorded_status": {
+          "status": "PASS_INDEPENDENT_DYNAMICS_V3_ANALYSIS"
+        },
+        "audit_scope": "Read archived independent verification; not rerun here."
+      }
+    },
+    {
+      "id": "confirmation_prior_constraints_v4",
+      "statistical_unit": "trajectory",
+      "n": 512,
+      "interval": "two-sided pointwise descriptive normal Monte Carlo: mean +/-1.959963984540054*sample_sd(ddof=1)/sqrt(n)",
+      "paired_rule": "Compute within-trajectory differences. For repeated proposal seeds, average seeds within trajectory before the interval.",
+      "resampling": null,
+      "multiplicity": "No multiplicity adjustment or selection by interval significance.",
+      "notes": "Primary512; repeated512/1024-particle diagnostics use32 fixed paths; four algorithm seeds averaged within path.",
+      "recorded_seeds": {
+        "seed": 2026100802,
+        "proposal_seeds": [
+          2026100803,
+          2026100813,
+          2026100823,
+          2026100833
+        ]
+      },
+      "evidence": [
+        {
+          "source": "experiments/confirmation_prior_constraints_v4/dynamics/analyze.py",
+          "line": 9,
+          "contains": "def "
+        }
+      ],
+      "protocol": "experiments/confirmation_prior_constraints_v4/results/dynamics/protocol.executed.json",
+      "freeze": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+      "verification": {
+        "source": "experiments/confirmation_prior_constraints_v4/verification/dynamics_analysis.json",
+        "recorded_status": {
+          "status": "PASS_INDEPENDENT_DYNAMICS_ANALYSIS_V4"
+        },
+        "audit_scope": "Read archived independent verification; not rerun here."
+      }
+    },
+    {
+      "id": "diagnostics_generalization_v5",
+      "statistical_unit": "trajectory",
+      "n": 32,
+      "interval": "two-sided pointwise descriptive normal Monte Carlo: mean +/-1.959963984540054*sample_sd(ddof=1)/sqrt(n)",
+      "paired_rule": "Compute within-trajectory differences. For repeated proposal seeds, average seeds within trajectory before the interval.",
+      "resampling": null,
+      "multiplicity": "No multiplicity adjustment or selection by interval significance.",
+      "notes": "Four proposal seeds averaged within each fixed trajectory, not128 independent trajectories.",
+      "recorded_seeds": {
+        "proposal_seeds": [
+          2026100903,
+          2026100913,
+          2026100923,
+          2026100933
+        ],
+        "measurement_seed": 2026100904,
+        "random_capacity": 4096
+      },
+      "evidence": [
+        {
+          "source": "experiments/diagnostics_generalization_v5/dynamics/analyze.py",
+          "line": 10,
+          "contains": "def "
+        }
+      ],
+      "protocol": "experiments/diagnostics_generalization_v5/results/dynamics/protocol.executed.json",
+      "freeze": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+      "verification": {
+        "source": "experiments/diagnostics_generalization_v5/verification/dynamics_analysis.json",
+        "recorded_status": {
+          "status": "PASS_INDEPENDENT_DYNAMICS_V5_ANALYSIS"
+        },
+        "audit_scope": "Read archived independent verification; not rerun here."
+      }
+    },
+    {
+      "id": "closure_controls_v6",
+      "statistical_unit": "trajectory",
+      "n": 32,
+      "interval": "two-sided pointwise descriptive normal Monte Carlo: mean +/-1.959963984540054*sample_sd(ddof=1)/sqrt(n)",
+      "paired_rule": "Compute within-trajectory differences. For repeated proposal seeds, average seeds within trajectory before the interval.",
+      "resampling": null,
+      "multiplicity": "No multiplicity adjustment or selection by interval significance.",
+      "notes": "Reuses v5 paths, observations, algorithm seeds and references;32 independent data units.",
+      "recorded_seeds": {
+        "proposal_seeds": [
+          2026100903,
+          2026100913,
+          2026100923,
+          2026100933
+        ],
+        "measurement_seed": 2026100904,
+        "random_capacity": 4096
+      },
+      "evidence": [
+        {
+          "source": "experiments/closure_controls_v6/dynamics/analyze.py",
+          "line": 9,
+          "contains": "def "
+        }
+      ],
+      "protocol": "experiments/closure_controls_v6/results/dynamics/protocol.executed.json",
+      "freeze": "experiments/closure_controls_v6/freeze_dynamics.json",
+      "verification": {
+        "source": "experiments/closure_controls_v6/verification/dynamics_analysis.json",
+        "recorded_status": {
+          "status": "PASS_INDEPENDENT_DYNAMICS_V6_ANALYSIS"
+        },
+        "audit_scope": "Read archived independent verification; not rerun here."
+      }
+    },
+    {
+      "id": "prior_reliability_v7",
+      "statistical_unit": "trajectory",
+      "n": 32,
+      "interval": "two-sided pointwise descriptive normal Monte Carlo: mean +/-1.959963984540054*sample_sd(ddof=1)/sqrt(n)",
+      "paired_rule": "Compute within-trajectory differences. For repeated proposal seeds, average seeds within trajectory before the interval.",
+      "resampling": null,
+      "multiplicity": "No multiplicity adjustment or selection by interval significance.",
+      "notes": "16 primary4096-particle alternative-minus-baseline prior contrasts.2048 is sensitivity.20 numerical-stability cells are operational diagnostics, not hypothesis tests.",
+      "recorded_seeds": {
+        "proposal_seeds": [
+          2026100903,
+          2026100913,
+          2026100923,
+          2026100933
+        ],
+        "random_capacity": 4096
+      },
+      "evidence": [
+        {
+          "source": "experiments/prior_reliability_v7/dynamics/analyze.py",
+          "line": 10,
+          "contains": "def "
+        }
+      ],
+      "protocol": "experiments/prior_reliability_v7/results/dynamics/protocol.executed.json",
+      "freeze": "experiments/prior_reliability_v7/freeze_dynamics.json",
+      "verification": {
+        "source": "experiments/prior_reliability_v7/verification/dynamics_analysis.json",
+        "recorded_status": {
+          "status": "PASS_INDEPENDENT_DYNAMICS_V7_ANALYSIS"
+        },
+        "audit_scope": "Read archived independent verification; not rerun here."
+      }
+    }
+  ],
+  "software_profiles": [
+    {
+      "id": "lee_development",
+      "records": [
+        {
+          "package": "python",
+          "version": "3.12.14",
+          "source": "experiments/lee2019_erp_pilot/environment.json",
+          "json_pointer": "/python",
+          "record_role": "archived pilot environment"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/lee2019_erp_pilot/environment.json",
+          "json_pointer": "/versions/numpy",
+          "record_role": "archived pilot environment"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/lee2019_erp_pilot/environment.json",
+          "json_pointer": "/versions/scipy",
+          "record_role": "archived pilot environment"
+        },
+        {
+          "package": "sklearn",
+          "version": "1.9.1",
+          "source": "experiments/lee2019_erp_pilot/environment.json",
+          "json_pointer": "/versions/sklearn",
+          "record_role": "archived pilot environment"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/lee2019_erp_pilot/environment.json",
+          "json_pointer": "/versions/torch",
+          "record_role": "archived pilot environment"
+        },
+        {
+          "package": "mne",
+          "version": "1.13.2",
+          "source": "experiments/lee2019_erp_pilot/environment.json",
+          "json_pointer": "/versions/mne",
+          "record_role": "archived pilot environment"
+        },
+        {
+          "package": "moabb",
+          "version": "1.7.2",
+          "source": "experiments/lee2019_erp_pilot/environment.json",
+          "json_pointer": "/versions/moabb",
+          "record_role": "archived pilot environment"
+        },
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/lee2019_erp_diagnostics_v1/environment.json",
+          "json_pointer": "/python",
+          "record_role": "archived diagnostic environment"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/lee2019_erp_diagnostics_v1/environment.json",
+          "json_pointer": "/torch",
+          "record_role": "archived diagnostic environment"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/lee2019_erp_diagnostics_v1/environment.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived diagnostic environment"
+        },
+        {
+          "package": "sklearn",
+          "version": "1.9.1",
+          "source": "experiments/lee2019_erp_diagnostics_v1/environment.json",
+          "json_pointer": "/sklearn",
+          "record_role": "archived diagnostic environment"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "lee_history",
+      "records": [
+        {
+          "package": "python",
+          "version": "3.12.14",
+          "source": "experiments/lee2019_erp_history_v1/data/preparestatus.json",
+          "json_pointer": "/versions/python",
+          "record_role": "archived feature-preparation environment; analysis runtime separately unavailable"
+        },
+        {
+          "package": "moabb",
+          "version": "1.7.2",
+          "source": "experiments/lee2019_erp_history_v1/data/preparestatus.json",
+          "json_pointer": "/versions/moabb",
+          "record_role": "archived feature-preparation environment; analysis runtime separately unavailable"
+        },
+        {
+          "package": "mne",
+          "version": "1.13.2",
+          "source": "experiments/lee2019_erp_history_v1/data/preparestatus.json",
+          "json_pointer": "/versions/mne",
+          "record_role": "archived feature-preparation environment; analysis runtime separately unavailable"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/lee2019_erp_history_v1/data/preparestatus.json",
+          "json_pointer": "/versions/numpy",
+          "record_role": "archived feature-preparation environment; analysis runtime separately unavailable"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/lee2019_erp_history_v1/data/preparestatus.json",
+          "json_pointer": "/versions/scipy",
+          "record_role": "archived feature-preparation environment; analysis runtime separately unavailable"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [
+        "torch"
+      ],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "yang_original",
+      "records": [
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/yang2025_replication_v1/results/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/yang2025_replication_v1/results/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "production identity"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [
+        "python",
+        "scipy"
+      ],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "continual_information_v1",
+      "records": [
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/continual_information_v1/eeg/results/environment.json",
+          "json_pointer": "/torch",
+          "record_role": "archived EEG execution environment"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/continual_information_v1/eeg/results/environment.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived EEG execution environment"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [
+        "python",
+        "scipy"
+      ],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "information_mechanisms_v2",
+      "records": [
+        {
+          "package": "torch_version",
+          "version": "2.14.0+cu132",
+          "source": "experiments/information_mechanisms_v2/results/initial_refined/identity.json",
+          "json_pointer": "/torch_version",
+          "record_role": "initial production identity"
+        },
+        {
+          "package": "numpy_version",
+          "version": "2.5.3",
+          "source": "experiments/information_mechanisms_v2/results/initial_refined/identity.json",
+          "json_pointer": "/numpy_version",
+          "record_role": "initial production identity"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/information_mechanisms_v2/results/pairing/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "pairing production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/information_mechanisms_v2/results/pairing/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "pairing production identity"
+        },
+        {
+          "package": "torch_version",
+          "version": "2.14.0+cu132",
+          "source": "experiments/information_mechanisms_v2/results/history/run_identity.json",
+          "json_pointer": "/torch_version",
+          "record_role": "history production identity"
+        },
+        {
+          "package": "numpy_version",
+          "version": "2.5.3",
+          "source": "experiments/information_mechanisms_v2/results/history/run_identity.json",
+          "json_pointer": "/numpy_version",
+          "record_role": "history production identity"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [
+        "python",
+        "scipy"
+      ],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "reliability_budget_v1",
+      "records": [
+        {
+          "package": "python",
+          "version": "3.12.14",
+          "source": "experiments/reliability_budget_v1/preflight.json",
+          "json_pointer": "/python",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/reliability_budget_v1/preflight.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/reliability_budget_v1/preflight.json",
+          "json_pointer": "/torch",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/reliability_budget_v1/preflight.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/reliability_budget_v1/results/eeg/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "EEG production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/reliability_budget_v1/results/eeg/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "EEG production identity"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/reliability_budget_v1/results/dynamics/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "dynamics production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/reliability_budget_v1/results/dynamics/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "dynamics production identity"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [
+        "scipy"
+      ],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "reliability_followup_v2",
+      "records": [
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/reliability_followup_v2/preflight.json",
+          "json_pointer": "/python",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/reliability_followup_v2/preflight.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/reliability_followup_v2/preflight.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/reliability_followup_v2/preflight.json",
+          "json_pointer": "/torch",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/reliability_followup_v2/preflight.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/reliability_followup_v2/results/eeg/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "EEG production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/reliability_followup_v2/results/eeg/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "EEG production identity"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/reliability_followup_v2/results/dynamics/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "dynamics production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/reliability_followup_v2/results/dynamics/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "dynamics production identity"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "feedback_retention_v3",
+      "records": [
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/feedback_retention_v3/preflight.json",
+          "json_pointer": "/python",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/feedback_retention_v3/preflight.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/feedback_retention_v3/preflight.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/feedback_retention_v3/preflight.json",
+          "json_pointer": "/torch",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/feedback_retention_v3/preflight.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived preflight"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/feedback_retention_v3/results/eeg/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "EEG production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/feedback_retention_v3/results/eeg/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "EEG production identity"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/feedback_retention_v3/results/dynamics/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "dynamics production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/feedback_retention_v3/results/dynamics/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "dynamics production identity"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "confirmation_prior_constraints_v4",
+      "records": [
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_eeg.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_eeg.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_eeg.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_eeg.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_eeg.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/confirmation_prior_constraints_v4/results/dynamics/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "dynamics production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/confirmation_prior_constraints_v4/results/dynamics/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "dynamics production identity"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "diagnostics_generalization_v5",
+      "records": [
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/diagnostics_generalization_v5/freeze_classification.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/diagnostics_generalization_v5/freeze_classification.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/diagnostics_generalization_v5/freeze_classification.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/diagnostics_generalization_v5/freeze_classification.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/diagnostics_generalization_v5/freeze_classification.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/diagnostics_generalization_v5/freeze_retention.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/diagnostics_generalization_v5/freeze_retention.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/diagnostics_generalization_v5/freeze_retention.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/diagnostics_generalization_v5/freeze_retention.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/diagnostics_generalization_v5/freeze_retention.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/diagnostics_generalization_v5/results/dynamics/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "dynamics production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/diagnostics_generalization_v5/results/dynamics/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "dynamics production identity"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "closure_controls_v6",
+      "records": [
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/closure_controls_v6/freeze_classification.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/closure_controls_v6/freeze_classification.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/closure_controls_v6/freeze_classification.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/closure_controls_v6/freeze_classification.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/closure_controls_v6/freeze_classification.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/closure_controls_v6/freeze_retention.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze (original retention freeze retained through R2)"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/closure_controls_v6/freeze_retention.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze (original retention freeze retained through R2)"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/closure_controls_v6/freeze_retention.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze (original retention freeze retained through R2)"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/closure_controls_v6/freeze_retention.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze (original retention freeze retained through R2)"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/closure_controls_v6/freeze_retention.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze (original retention freeze retained through R2)"
+        },
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/closure_controls_v6/freeze_dynamics.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/closure_controls_v6/freeze_dynamics.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/closure_controls_v6/freeze_dynamics.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/closure_controls_v6/freeze_dynamics.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/closure_controls_v6/freeze_dynamics.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/closure_controls_v6/results/dynamics/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "dynamics production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/closure_controls_v6/results/dynamics/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "dynamics production identity"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    },
+    {
+      "id": "prior_reliability_v7",
+      "records": [
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/prior_reliability_v7/freeze_reliability.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/prior_reliability_v7/freeze_reliability.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/prior_reliability_v7/freeze_reliability.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/prior_reliability_v7/freeze_reliability.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/prior_reliability_v7/freeze_reliability.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "python",
+          "version": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+          "source": "experiments/prior_reliability_v7/freeze_dynamics.json",
+          "json_pointer": "/python",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/prior_reliability_v7/freeze_dynamics.json",
+          "json_pointer": "/numpy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "scipy",
+          "version": "1.18.1",
+          "source": "experiments/prior_reliability_v7/freeze_dynamics.json",
+          "json_pointer": "/scipy",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/prior_reliability_v7/freeze_dynamics.json",
+          "json_pointer": "/torch",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "cuda",
+          "version": "13.2",
+          "source": "experiments/prior_reliability_v7/freeze_dynamics.json",
+          "json_pointer": "/cuda",
+          "record_role": "archived stage freeze"
+        },
+        {
+          "package": "torch",
+          "version": "2.14.0+cu132",
+          "source": "experiments/prior_reliability_v7/results/dynamics/run_identity.json",
+          "json_pointer": "/torch",
+          "record_role": "dynamics production identity"
+        },
+        {
+          "package": "numpy",
+          "version": "2.5.3",
+          "source": "experiments/prior_reliability_v7/results/dynamics/run_identity.json",
+          "json_pointer": "/numpy",
+          "record_role": "dynamics production identity"
+        },
+        {
+          "package": "numpy_version",
+          "version": "2.5.3",
+          "source": "experiments/prior_reliability_v7/results/reliability/run_identity.json",
+          "json_pointer": "/numpy_version",
+          "record_role": "reliability production identity"
+        },
+        {
+          "package": "torch_version",
+          "version": "2.14.0+cu132",
+          "source": "experiments/prior_reliability_v7/results/reliability/run_identity.json",
+          "json_pointer": "/torch_version",
+          "record_role": "reliability production identity"
+        }
+      ],
+      "unavailable_in_listed_historical_records": [],
+      "scope": "Archived record only. Preflight/freeze, feature-preparation and verifier versions are not promoted to independently recorded production-analysis runtime."
+    }
+  ],
+  "records": [
+    {
+      "source": "experiments/lee2019_erp_history_v1/results/verification_pilot.json",
+      "json_pointer": "/status",
+      "value": "PASS",
+      "sha256": "94626f341a36dbf05e69590810da6c5cceec7f5f6c3a8728ad76574bda5563cb"
+    },
+    {
+      "source": "experiments/lee2019_erp_history_v1/results/verification_history.json",
+      "json_pointer": "/status",
+      "value": "PASS",
+      "sha256": "40799b3831bed52cb7a50b018e72f215aa7f02b787c83b347c9bcb6eeaa942bb"
+    },
+    {
+      "source": "experiments/lee2019_erp_diagnostics_v1/results/verification.json",
+      "json_pointer": "/status",
+      "value": "PASS",
+      "sha256": "f91168f3864ff29c4bc1e4363788d2db067b299a708c3054afe0ce74ee9918ec"
+    },
+    {
+      "source": "experiments/yang2025_replication_v1/results/verification/run_verification.json",
+      "json_pointer": "/status",
+      "value": "PASS",
+      "sha256": "0f29e9a9b4401ad72852e77b5cd624eb54e588142e7f3ed502c974cf91d565cb"
+    },
+    {
+      "source": "experiments/continual_information_v1/verification/eeg_verification.json",
+      "json_pointer": "/status",
+      "value": "PASS_ARTIFACT_MATH_AND_PROTOCOL_CHECKS",
+      "sha256": "455c2fc4eba25a7f614b6ce15ffa3788be0608beab7bd652dd3a8251eaab9b88"
+    },
+    {
+      "source": "experiments/information_mechanisms_v2/results/initial_refined/verification.json",
+      "json_pointer": "/status",
+      "value": "PASS",
+      "sha256": "dec128c68025a1f4524eb283fa3bfb1b632a5ef9c81838a19303d401ed573e39"
+    },
+    {
+      "source": "experiments/information_mechanisms_v2/results/pairing/verification.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_PAIRING_RECONSTRUCTION",
+      "sha256": "a39436e33f594a6c5b029997a1d898bc00b7956105f66344b999051f4041eaa6"
+    },
+    {
+      "source": "experiments/information_mechanisms_v2/results/history/verification.json",
+      "json_pointer": "/status",
+      "value": "PASS_MATH_CAUSAL_TIMING_AND_SUMMARIES",
+      "sha256": "554161a2b5204e6073db23c783ba4e49060e19d8ae09ae669b7d21916a6b42f3"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/verification/eeg_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_EEG_ANALYSIS",
+      "sha256": "519e32da92ab028327c4fa315b2b598501a2b13f9f79dbd0060f60a6640a4031"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/verification/eeg_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_EEG_V2_ANALYSIS",
+      "sha256": "84cf86eb2af8fff6e84a813ce1c88727ff2bf1cb2f6ce6a4b4eff5abe57addea"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/verification/eeg_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_EEG_V3_ANALYSIS",
+      "sha256": "276a167a1dd593b37b10d3603e7307f914b2a00888d151f1ec5f380242ad0e52"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/verification/eeg_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_EEG_V4_ANALYSIS",
+      "sha256": "fd8f9bc303627d1781297d26b565a3ae6a35b15984f7de52805bec5edff00a90"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/verification/confirmation_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_CONFIRMATION_ANALYSIS",
+      "sha256": "0309713b612eb4a304ce3733fad3688df1f82513778bac0d7357fe34db60c1a5"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/verification/classification_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS",
+      "sha256": "bd9aeb003b5dd2deefe4f967ac2f04c64dbd099e416fdc71c2d0e9820de06245"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/verification/retention_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_RETENTION_ANALYSIS_V5",
+      "sha256": "e339c6cada8ce96d5fdce39206596b8157b1d4f27d7c1c214b7d79bfc9c12962"
+    },
+    {
+      "source": "experiments/closure_controls_v6/verification/classification_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_CLASSIFICATION_ANALYSIS_V6",
+      "sha256": "1f3976cdb6df054f01469572b843f7d25f8bc98ec3f691221ea854862ace195d"
+    },
+    {
+      "source": "experiments/closure_controls_v6/verification/retention_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_RETENTION_V6_ANALYSIS",
+      "sha256": "84bcf4bb6f7df13e46494f5b06ff21eb837e1529dfa6cf6cd3691a7a0ecfb23d"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/verification/reliability_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_RELIABILITY_V7_ANALYSIS",
+      "sha256": "f56d8da32da7bda6b39eb4e17af7e70190caf85c1ceecebfbd8659a7ac84a60c"
+    },
+    {
+      "source": "experiments/lee2019_erp_history_v1/protocol.json",
+      "json_pointer": "/inference",
+      "value": {
+        "bootstrap": "10000 fixed-seed subject resamples, mean within-subject differences; descriptive pilot intervals",
+        "seed": 20261003,
+        "no_result_selection": "All54subjects fixed. Report1-12 development and13-54 confirmation separately. No tuning, exclusion, stopping or extension according to observed benefits.",
+        "causal_history": "Tested by the separate frozen history section; full-event original-protocol replication is not used as its different-row comparison baseline."
+      },
+      "sha256": "d316f746477a7dd601639cfc5250279bc50ca4ae30b4edeb58901304ff5b84a3"
+    },
+    {
+      "source": "experiments/lee2019_erp_history_v1/protocol.json",
+      "json_pointer": "/history/inference",
+      "value": "Report1-12 development and13-54 confirmation separately, plus all54 descriptively. 10000 fixed participant resamples seed20261005. Each of2primary confirmation differences gets97.5percent two-sided bootstrap interval (quantiles .0125,.9875) to control2interval coverage via Bonferroni; remaining intervals descriptive95percent",
+      "sha256": "d316f746477a7dd601639cfc5250279bc50ca4ae30b4edeb58901304ff5b84a3"
+    },
+    {
+      "source": "experiments/lee2019_erp_history_v1/protocol.json",
+      "json_pointer": "/history/primary_confirmation_comparisons",
+      "value": [
+        "future label_updated ordered_timing AUC minus current_timing AUC",
+        "future label_updated ordered_timing AUC minus mean of five shuffled_timing AUCs"
+      ],
+      "sha256": "d316f746477a7dd601639cfc5250279bc50ca4ae30b4edeb58901304ff5b84a3"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/reliability/protocol_fragment.json",
+      "json_pointer": "/statistics",
+      "value": {
+        "subject_parameter_interval": "Discrete finite-model equal-tail .025/.975 quantiles",
+        "individual_probability_mc_interval": "Unconditional probabilities: Wilson95 with denominator32768; computation uncertainty only",
+        "paired_mc_error": "Unconditional probabilities only: paired per-repetition indicator differences with common random numbers; no conditional-recovery ratio contrasts",
+        "group_bootstrap_replicates": 10000,
+        "bootstrap_seed": 2026101111,
+        "bootstrap_generator": "PCG64DXSM",
+        "bootstrap_seedsequence": [
+          "bootstrap_seed",
+          "group_code"
+        ],
+        "group_codes": {
+          "all62": 0,
+          "original_task_eligible29": 1,
+          "nested_all41": 2,
+          "original_task_eligible19": 3
+        },
+        "quantile_method": "linear",
+        "quantiles": [
+          0.025,
+          0.975
+        ],
+        "scope": "Descriptive conditional participant bootstrap; no teacher refit, posterior refit, or multiple-comparison confirmation",
+        "population_false_alarm_guarantee": false,
+        "conditional_recovery": "Per-person descriptive recovered-given-confirmed-failure ratio only; denominator is arm/person simulated confirmed-failure count; zero denominator null and person retained; Wilson95 uses actual denominator; excluded from group bootstrap and paired contrasts/MC SE"
+      },
+      "sha256": "c0a500933e0e53c62b639f69948c9b135a7da69729da3b8ce5450b91f2a33c93"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/retention/protocol_fragment.json",
+      "json_pointer": "/bootstrap_seed",
+      "value": 2026100912,
+      "sha256": "90494a0c62ab46a4a86352642d1719a49012a617101e4c69fbc4604016597b70"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/retention/protocol_fragment.json",
+      "json_pointer": "/uncertainty",
+      "value": "10000 paired recipient bootstrap draws using default_rng(SeedSequence([2026100912,n,*sorted_valid_person_ids])). Same draws across methods/snapshots; linear percentiles .025/.975, descriptive, no multiplicity adjustment. Unit is person, not fold. Conditional on fixed fitted models and selected feedback.",
+      "sha256": "90494a0c62ab46a4a86352642d1719a49012a617101e4c69fbc4604016597b70"
+    },
+    {
+      "source": "experiments/closure_controls_v6/revisions/retention_r2/protocol_fragment.json",
+      "json_pointer": "/bootstrap_seed",
+      "value": 2026101012,
+      "sha256": "8a9cef6fb55eb4da4725adce7740673ab3f7c404913ec0e05d2bbfb5c2fe9a93"
+    },
+    {
+      "source": "experiments/closure_controls_v6/revisions/retention_r2/protocol_fragment.json",
+      "json_pointer": "/uncertainty",
+      "value": "10000 paired-person bootstrap draws default_rng(SeedSequence([2026101012,n,*sorted valid IDs])); same draws methods and snapshots; linear .025/.975 quantiles, descriptive, no multiplicity adjustment. Pool each person disjoint3outer blocks before BCE/BA/AUC; folds not independent units; 2 snapshots samepeople. Conditional on fixed fits and this reused data.",
+      "sha256": "8a9cef6fb55eb4da4725adce7740673ab3f7c404913ec0e05d2bbfb5c2fe9a93"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/results/dynamics/run_identity.json",
+      "json_pointer": "/seed",
+      "value": 2026100502,
+      "sha256": "e72c85df5872827096964c3c657172f145ee34c2f19bc50369c8405d0a8c6426"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/verification/dynamics_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_DYNAMICS_ANALYSIS",
+      "sha256": "a252223f5505e408655807fc47ea08477f6421575803a6b06ce33f97c9773b45"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/results/dynamics/run_identity.json",
+      "json_pointer": "/seed",
+      "value": 2026100602,
+      "sha256": "9000f0d8722bdf556840d569f967f73e625fcea47eb8a9cf8d5bc98dce6ff584"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/verification/dynamics_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_DYNAMICS_V2_ANALYSIS",
+      "sha256": "2da331e43c92b28b613b48ba812eeb12d41fabfc7672ffa06223d21847d09c12"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/results/dynamics/run_identity.json",
+      "json_pointer": "/seed",
+      "value": 2026100702,
+      "sha256": "b685d48cc87c30d7010a1559d9b736c576d3dc99aad637d97c37ced2c538038f"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/results/dynamics/run_identity.json",
+      "json_pointer": "/proposal_seed",
+      "value": 2026100703,
+      "sha256": "b685d48cc87c30d7010a1559d9b736c576d3dc99aad637d97c37ced2c538038f"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/verification/dynamics_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_DYNAMICS_V3_ANALYSIS",
+      "sha256": "051ac72d55b7fc3a3a6ef024e1f4b43946496113e4fa8e13895341d234066e77"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/results/dynamics/run_identity.json",
+      "json_pointer": "/seed",
+      "value": 2026100802,
+      "sha256": "0ee1209daf2191b83a77c704c0097fddd6535430431f1cfd2b4ea9bebc1b6da7"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/results/dynamics/run_identity.json",
+      "json_pointer": "/proposal_seeds",
+      "value": [
+        2026100803,
+        2026100813,
+        2026100823,
+        2026100833
+      ],
+      "sha256": "0ee1209daf2191b83a77c704c0097fddd6535430431f1cfd2b4ea9bebc1b6da7"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/verification/dynamics_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_DYNAMICS_ANALYSIS_V4",
+      "sha256": "fc365a22827e68f0d5b459a151b6a68d598342a7466a67d3d033180e4a3fe419"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/results/dynamics/run_identity.json",
+      "json_pointer": "/proposal_seeds",
+      "value": [
+        2026100903,
+        2026100913,
+        2026100923,
+        2026100933
+      ],
+      "sha256": "6dfdd20d2b9a815bd0e3edba16807f06050e0cdf2f3cba1bb9a5423d0c8250f9"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/results/dynamics/run_identity.json",
+      "json_pointer": "/measurement_seed",
+      "value": 2026100904,
+      "sha256": "6dfdd20d2b9a815bd0e3edba16807f06050e0cdf2f3cba1bb9a5423d0c8250f9"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/results/dynamics/run_identity.json",
+      "json_pointer": "/random_capacity",
+      "value": 4096,
+      "sha256": "6dfdd20d2b9a815bd0e3edba16807f06050e0cdf2f3cba1bb9a5423d0c8250f9"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/verification/dynamics_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_DYNAMICS_V5_ANALYSIS",
+      "sha256": "dd5c87c83e0c4a53293848c0063e85e69d96c0149e043f45afc3c00dfa22683e"
+    },
+    {
+      "source": "experiments/closure_controls_v6/results/dynamics/run_identity.json",
+      "json_pointer": "/proposal_seeds",
+      "value": [
+        2026100903,
+        2026100913,
+        2026100923,
+        2026100933
+      ],
+      "sha256": "d2943641f78ae5af6d760c51319a3af2d3c2527d71370a62d93df649716e6757"
+    },
+    {
+      "source": "experiments/closure_controls_v6/results/dynamics/run_identity.json",
+      "json_pointer": "/measurement_seed",
+      "value": 2026100904,
+      "sha256": "d2943641f78ae5af6d760c51319a3af2d3c2527d71370a62d93df649716e6757"
+    },
+    {
+      "source": "experiments/closure_controls_v6/results/dynamics/run_identity.json",
+      "json_pointer": "/random_capacity",
+      "value": 4096,
+      "sha256": "d2943641f78ae5af6d760c51319a3af2d3c2527d71370a62d93df649716e6757"
+    },
+    {
+      "source": "experiments/closure_controls_v6/verification/dynamics_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_DYNAMICS_V6_ANALYSIS",
+      "sha256": "95ae0b289838d8d796d3e5388eae38bf8b5e52f29fc114400d8989f517f857c8"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/results/dynamics/run_identity.json",
+      "json_pointer": "/proposal_seeds",
+      "value": [
+        2026100903,
+        2026100913,
+        2026100923,
+        2026100933
+      ],
+      "sha256": "c862c36c88cb72af80e15c55841c9d38840428bfbfc0b105bc3d1d110c2e51ed"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/results/dynamics/run_identity.json",
+      "json_pointer": "/random_capacity",
+      "value": 4096,
+      "sha256": "c862c36c88cb72af80e15c55841c9d38840428bfbfc0b105bc3d1d110c2e51ed"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/verification/dynamics_analysis.json",
+      "json_pointer": "/status",
+      "value": "PASS_INDEPENDENT_DYNAMICS_V7_ANALYSIS",
+      "sha256": "e2afe5c25c997324bdcd9983a47c2161f4d6f3acf9003f6290475d48a504ed2c"
+    },
+    {
+      "source": "experiments/continual_information_v1/dynamics/config.json",
+      "json_pointer": "/seed",
+      "value": 2026100201,
+      "sha256": "1946f761cab034501784e64124179e4ac90104d127117472e322fb5fd7e31993"
+    },
+    {
+      "source": "experiments/continual_information_v1/dynamics/config.json",
+      "json_pointer": "/confidence_multiplier",
+      "value": 1.959963984540054,
+      "sha256": "1946f761cab034501784e64124179e4ac90104d127117472e322fb5fd7e31993"
+    },
+    {
+      "source": "experiments/continual_information_v1/verification/dynamics_verification.json",
+      "json_pointer": "/status",
+      "value": "PASS_ARTIFACT_MATH_AND_PROTOCOL_CHECKS",
+      "sha256": "973da814cbaf6a6efc9ecc9b71f6a5c39930000004734ed6ee4c11ea0685290b"
+    },
+    {
+      "source": "experiments/lee2019_erp_pilot/environment.json",
+      "json_pointer": "/python",
+      "value": "3.12.14",
+      "sha256": "909f17f795b7c162a483d7f61441b2199d66d08304c3b1adfdfc7545b9bad5d6"
+    },
+    {
+      "source": "experiments/lee2019_erp_pilot/environment.json",
+      "json_pointer": "/versions/numpy",
+      "value": "2.5.3",
+      "sha256": "909f17f795b7c162a483d7f61441b2199d66d08304c3b1adfdfc7545b9bad5d6"
+    },
+    {
+      "source": "experiments/lee2019_erp_pilot/environment.json",
+      "json_pointer": "/versions/scipy",
+      "value": "1.18.1",
+      "sha256": "909f17f795b7c162a483d7f61441b2199d66d08304c3b1adfdfc7545b9bad5d6"
+    },
+    {
+      "source": "experiments/lee2019_erp_pilot/environment.json",
+      "json_pointer": "/versions/sklearn",
+      "value": "1.9.1",
+      "sha256": "909f17f795b7c162a483d7f61441b2199d66d08304c3b1adfdfc7545b9bad5d6"
+    },
+    {
+      "source": "experiments/lee2019_erp_pilot/environment.json",
+      "json_pointer": "/versions/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "909f17f795b7c162a483d7f61441b2199d66d08304c3b1adfdfc7545b9bad5d6"
+    },
+    {
+      "source": "experiments/lee2019_erp_pilot/environment.json",
+      "json_pointer": "/versions/mne",
+      "value": "1.13.2",
+      "sha256": "909f17f795b7c162a483d7f61441b2199d66d08304c3b1adfdfc7545b9bad5d6"
+    },
+    {
+      "source": "experiments/lee2019_erp_pilot/environment.json",
+      "json_pointer": "/versions/moabb",
+      "value": "1.7.2",
+      "sha256": "909f17f795b7c162a483d7f61441b2199d66d08304c3b1adfdfc7545b9bad5d6"
+    },
+    {
+      "source": "experiments/lee2019_erp_diagnostics_v1/environment.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "e4fe9e06fbc2ecc44d97ccba62e7cca8d1745aa39ba5a60eb17515767fd53f49"
+    },
+    {
+      "source": "experiments/lee2019_erp_diagnostics_v1/environment.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "e4fe9e06fbc2ecc44d97ccba62e7cca8d1745aa39ba5a60eb17515767fd53f49"
+    },
+    {
+      "source": "experiments/lee2019_erp_diagnostics_v1/environment.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "e4fe9e06fbc2ecc44d97ccba62e7cca8d1745aa39ba5a60eb17515767fd53f49"
+    },
+    {
+      "source": "experiments/lee2019_erp_diagnostics_v1/environment.json",
+      "json_pointer": "/sklearn",
+      "value": "1.9.1",
+      "sha256": "e4fe9e06fbc2ecc44d97ccba62e7cca8d1745aa39ba5a60eb17515767fd53f49"
+    },
+    {
+      "source": "experiments/lee2019_erp_history_v1/data/preparestatus.json",
+      "json_pointer": "/versions/python",
+      "value": "3.12.14",
+      "sha256": "70cc1747dda1ce91fb4f8c5803322fb47ab9440bbeeaef5178791f9674e08a2d"
+    },
+    {
+      "source": "experiments/lee2019_erp_history_v1/data/preparestatus.json",
+      "json_pointer": "/versions/moabb",
+      "value": "1.7.2",
+      "sha256": "70cc1747dda1ce91fb4f8c5803322fb47ab9440bbeeaef5178791f9674e08a2d"
+    },
+    {
+      "source": "experiments/lee2019_erp_history_v1/data/preparestatus.json",
+      "json_pointer": "/versions/mne",
+      "value": "1.13.2",
+      "sha256": "70cc1747dda1ce91fb4f8c5803322fb47ab9440bbeeaef5178791f9674e08a2d"
+    },
+    {
+      "source": "experiments/lee2019_erp_history_v1/data/preparestatus.json",
+      "json_pointer": "/versions/numpy",
+      "value": "2.5.3",
+      "sha256": "70cc1747dda1ce91fb4f8c5803322fb47ab9440bbeeaef5178791f9674e08a2d"
+    },
+    {
+      "source": "experiments/lee2019_erp_history_v1/data/preparestatus.json",
+      "json_pointer": "/versions/scipy",
+      "value": "1.18.1",
+      "sha256": "70cc1747dda1ce91fb4f8c5803322fb47ab9440bbeeaef5178791f9674e08a2d"
+    },
+    {
+      "source": "experiments/yang2025_replication_v1/results/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "65ce17e007906635697c51d5f637470ad13e891898c216ed79a81dbf1d519976"
+    },
+    {
+      "source": "experiments/yang2025_replication_v1/results/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "65ce17e007906635697c51d5f637470ad13e891898c216ed79a81dbf1d519976"
+    },
+    {
+      "source": "experiments/continual_information_v1/eeg/results/environment.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "083deae8934f507614ebb91d4b18c50e545156a62bdfcdc8c0dd4f7447368f55"
+    },
+    {
+      "source": "experiments/continual_information_v1/eeg/results/environment.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "083deae8934f507614ebb91d4b18c50e545156a62bdfcdc8c0dd4f7447368f55"
+    },
+    {
+      "source": "experiments/information_mechanisms_v2/results/initial_refined/identity.json",
+      "json_pointer": "/torch_version",
+      "value": "2.14.0+cu132",
+      "sha256": "cdf2c2a9d5e5421f49f79a8b318f42a7e66d05081d0d967501469bc4cdb22043"
+    },
+    {
+      "source": "experiments/information_mechanisms_v2/results/initial_refined/identity.json",
+      "json_pointer": "/numpy_version",
+      "value": "2.5.3",
+      "sha256": "cdf2c2a9d5e5421f49f79a8b318f42a7e66d05081d0d967501469bc4cdb22043"
+    },
+    {
+      "source": "experiments/information_mechanisms_v2/results/pairing/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "57dc86727cbbb04123fc6de85635a5e2165db1ed893cd2dc65c7942134f435ad"
+    },
+    {
+      "source": "experiments/information_mechanisms_v2/results/pairing/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "57dc86727cbbb04123fc6de85635a5e2165db1ed893cd2dc65c7942134f435ad"
+    },
+    {
+      "source": "experiments/information_mechanisms_v2/results/history/run_identity.json",
+      "json_pointer": "/torch_version",
+      "value": "2.14.0+cu132",
+      "sha256": "c07fa5aa361bf956b38658a45681fa92cf45312db4a861513e2fc405a10ecf87"
+    },
+    {
+      "source": "experiments/information_mechanisms_v2/results/history/run_identity.json",
+      "json_pointer": "/numpy_version",
+      "value": "2.5.3",
+      "sha256": "c07fa5aa361bf956b38658a45681fa92cf45312db4a861513e2fc405a10ecf87"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/preflight.json",
+      "json_pointer": "/python",
+      "value": "3.12.14",
+      "sha256": "42fdee00ff1e39906a63bb7e3ba6326c75c470c595dd5a3785696a49594dfa2d"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/preflight.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "42fdee00ff1e39906a63bb7e3ba6326c75c470c595dd5a3785696a49594dfa2d"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/preflight.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "42fdee00ff1e39906a63bb7e3ba6326c75c470c595dd5a3785696a49594dfa2d"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/preflight.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "42fdee00ff1e39906a63bb7e3ba6326c75c470c595dd5a3785696a49594dfa2d"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/results/eeg/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "64b08d3fff11a5710ac08d117bd74d31f534e6e24ce32d7de8eeab4d79b42238"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/results/eeg/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "64b08d3fff11a5710ac08d117bd74d31f534e6e24ce32d7de8eeab4d79b42238"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/results/dynamics/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "e72c85df5872827096964c3c657172f145ee34c2f19bc50369c8405d0a8c6426"
+    },
+    {
+      "source": "experiments/reliability_budget_v1/results/dynamics/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "e72c85df5872827096964c3c657172f145ee34c2f19bc50369c8405d0a8c6426"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/preflight.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "137370aa181abe1081c269633ce143aebb79fa41051d777890ae0472aa4dd719"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/preflight.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "137370aa181abe1081c269633ce143aebb79fa41051d777890ae0472aa4dd719"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/preflight.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "137370aa181abe1081c269633ce143aebb79fa41051d777890ae0472aa4dd719"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/preflight.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "137370aa181abe1081c269633ce143aebb79fa41051d777890ae0472aa4dd719"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/preflight.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "137370aa181abe1081c269633ce143aebb79fa41051d777890ae0472aa4dd719"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/results/eeg/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "f59d95afcfb5c0fb4fed4aacbdee9e4b9fddb9a0d2c9c3badc116640102c95aa"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/results/eeg/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "f59d95afcfb5c0fb4fed4aacbdee9e4b9fddb9a0d2c9c3badc116640102c95aa"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/results/dynamics/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "9000f0d8722bdf556840d569f967f73e625fcea47eb8a9cf8d5bc98dce6ff584"
+    },
+    {
+      "source": "experiments/reliability_followup_v2/results/dynamics/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "9000f0d8722bdf556840d569f967f73e625fcea47eb8a9cf8d5bc98dce6ff584"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/preflight.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "e7ea7c4d072cb0b6d058df6506b80a9107ed7bbae70c08491ad83bc66b67f43e"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/preflight.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "e7ea7c4d072cb0b6d058df6506b80a9107ed7bbae70c08491ad83bc66b67f43e"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/preflight.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "e7ea7c4d072cb0b6d058df6506b80a9107ed7bbae70c08491ad83bc66b67f43e"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/preflight.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "e7ea7c4d072cb0b6d058df6506b80a9107ed7bbae70c08491ad83bc66b67f43e"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/preflight.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "e7ea7c4d072cb0b6d058df6506b80a9107ed7bbae70c08491ad83bc66b67f43e"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/results/eeg/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "13cb61b0974c90a2ea5cb0f850ba80053d5e20bb352b2c7f2efe868b124bd9ac"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/results/eeg/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "13cb61b0974c90a2ea5cb0f850ba80053d5e20bb352b2c7f2efe868b124bd9ac"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/results/dynamics/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "b685d48cc87c30d7010a1559d9b736c576d3dc99aad637d97c37ced2c538038f"
+    },
+    {
+      "source": "experiments/feedback_retention_v3/results/dynamics/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "b685d48cc87c30d7010a1559d9b736c576d3dc99aad637d97c37ced2c538038f"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_eeg.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "5a4541acc897e230ffc12e7603297ce54a7643342e27ce04257865548aee1bb3"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_eeg.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "5a4541acc897e230ffc12e7603297ce54a7643342e27ce04257865548aee1bb3"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_eeg.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "5a4541acc897e230ffc12e7603297ce54a7643342e27ce04257865548aee1bb3"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_eeg.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "5a4541acc897e230ffc12e7603297ce54a7643342e27ce04257865548aee1bb3"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_eeg.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "5a4541acc897e230ffc12e7603297ce54a7643342e27ce04257865548aee1bb3"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "1d3f3fa47b82461078d0af9e04aa5c0a60e73d0d9eeed0b829da0bcf54d4836d"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "1d3f3fa47b82461078d0af9e04aa5c0a60e73d0d9eeed0b829da0bcf54d4836d"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "1d3f3fa47b82461078d0af9e04aa5c0a60e73d0d9eeed0b829da0bcf54d4836d"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "1d3f3fa47b82461078d0af9e04aa5c0a60e73d0d9eeed0b829da0bcf54d4836d"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "1d3f3fa47b82461078d0af9e04aa5c0a60e73d0d9eeed0b829da0bcf54d4836d"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "0b40d8a3cb84b19c698764b8d9edbe97fdddd180eca6f134e144c422a4b24b22"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "0b40d8a3cb84b19c698764b8d9edbe97fdddd180eca6f134e144c422a4b24b22"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "0b40d8a3cb84b19c698764b8d9edbe97fdddd180eca6f134e144c422a4b24b22"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "0b40d8a3cb84b19c698764b8d9edbe97fdddd180eca6f134e144c422a4b24b22"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "0b40d8a3cb84b19c698764b8d9edbe97fdddd180eca6f134e144c422a4b24b22"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/results/dynamics/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "0ee1209daf2191b83a77c704c0097fddd6535430431f1cfd2b4ea9bebc1b6da7"
+    },
+    {
+      "source": "experiments/confirmation_prior_constraints_v4/results/dynamics/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "0ee1209daf2191b83a77c704c0097fddd6535430431f1cfd2b4ea9bebc1b6da7"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_classification.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "401743f3b7348809d0efcf0164f7b7c9ab60dad0e204e6f95f97dcc14ad51744"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_classification.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "401743f3b7348809d0efcf0164f7b7c9ab60dad0e204e6f95f97dcc14ad51744"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_classification.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "401743f3b7348809d0efcf0164f7b7c9ab60dad0e204e6f95f97dcc14ad51744"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_classification.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "401743f3b7348809d0efcf0164f7b7c9ab60dad0e204e6f95f97dcc14ad51744"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_classification.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "401743f3b7348809d0efcf0164f7b7c9ab60dad0e204e6f95f97dcc14ad51744"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_retention.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "c5b17f6c7c34a6e79d09d160ccbba606768a8ef990c7fe5c55f0e2b9e4192201"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_retention.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "c5b17f6c7c34a6e79d09d160ccbba606768a8ef990c7fe5c55f0e2b9e4192201"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_retention.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "c5b17f6c7c34a6e79d09d160ccbba606768a8ef990c7fe5c55f0e2b9e4192201"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_retention.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "c5b17f6c7c34a6e79d09d160ccbba606768a8ef990c7fe5c55f0e2b9e4192201"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_retention.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "c5b17f6c7c34a6e79d09d160ccbba606768a8ef990c7fe5c55f0e2b9e4192201"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "59474ba0596ce20b9b0eac3bb95b9686263f94d404d7fd25328d32738c3c96e8"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "59474ba0596ce20b9b0eac3bb95b9686263f94d404d7fd25328d32738c3c96e8"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "59474ba0596ce20b9b0eac3bb95b9686263f94d404d7fd25328d32738c3c96e8"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "59474ba0596ce20b9b0eac3bb95b9686263f94d404d7fd25328d32738c3c96e8"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/freeze_dynamics.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "59474ba0596ce20b9b0eac3bb95b9686263f94d404d7fd25328d32738c3c96e8"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/results/dynamics/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "6dfdd20d2b9a815bd0e3edba16807f06050e0cdf2f3cba1bb9a5423d0c8250f9"
+    },
+    {
+      "source": "experiments/diagnostics_generalization_v5/results/dynamics/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "6dfdd20d2b9a815bd0e3edba16807f06050e0cdf2f3cba1bb9a5423d0c8250f9"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_classification.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "7bbcad995a1b3501796de6eea6c7cec406576a16f4b17577359bba3ecc9c0c21"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_classification.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "7bbcad995a1b3501796de6eea6c7cec406576a16f4b17577359bba3ecc9c0c21"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_classification.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "7bbcad995a1b3501796de6eea6c7cec406576a16f4b17577359bba3ecc9c0c21"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_classification.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "7bbcad995a1b3501796de6eea6c7cec406576a16f4b17577359bba3ecc9c0c21"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_classification.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "7bbcad995a1b3501796de6eea6c7cec406576a16f4b17577359bba3ecc9c0c21"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_retention.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "e2475baee330c1eac04ca0dcc0a3b5476ba6820b74e4f297d2860392444653e9"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_retention.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "e2475baee330c1eac04ca0dcc0a3b5476ba6820b74e4f297d2860392444653e9"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_retention.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "e2475baee330c1eac04ca0dcc0a3b5476ba6820b74e4f297d2860392444653e9"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_retention.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "e2475baee330c1eac04ca0dcc0a3b5476ba6820b74e4f297d2860392444653e9"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_retention.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "e2475baee330c1eac04ca0dcc0a3b5476ba6820b74e4f297d2860392444653e9"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_dynamics.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "1fd28aa48e5301b99742dffaa66b987498a0a7f0d8e06f1a6601219007e9f674"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_dynamics.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "1fd28aa48e5301b99742dffaa66b987498a0a7f0d8e06f1a6601219007e9f674"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_dynamics.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "1fd28aa48e5301b99742dffaa66b987498a0a7f0d8e06f1a6601219007e9f674"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_dynamics.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "1fd28aa48e5301b99742dffaa66b987498a0a7f0d8e06f1a6601219007e9f674"
+    },
+    {
+      "source": "experiments/closure_controls_v6/freeze_dynamics.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "1fd28aa48e5301b99742dffaa66b987498a0a7f0d8e06f1a6601219007e9f674"
+    },
+    {
+      "source": "experiments/closure_controls_v6/results/dynamics/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "d2943641f78ae5af6d760c51319a3af2d3c2527d71370a62d93df649716e6757"
+    },
+    {
+      "source": "experiments/closure_controls_v6/results/dynamics/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "d2943641f78ae5af6d760c51319a3af2d3c2527d71370a62d93df649716e6757"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/freeze_reliability.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "939b153e1f275ea014de68dfaaee5c8d5bcf5c807fa9c7a122bbf15e18264004"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/freeze_reliability.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "939b153e1f275ea014de68dfaaee5c8d5bcf5c807fa9c7a122bbf15e18264004"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/freeze_reliability.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "939b153e1f275ea014de68dfaaee5c8d5bcf5c807fa9c7a122bbf15e18264004"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/freeze_reliability.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "939b153e1f275ea014de68dfaaee5c8d5bcf5c807fa9c7a122bbf15e18264004"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/freeze_reliability.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "939b153e1f275ea014de68dfaaee5c8d5bcf5c807fa9c7a122bbf15e18264004"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/freeze_dynamics.json",
+      "json_pointer": "/python",
+      "value": "3.12.14 (main, Sep  2 2026, 23:27:36) [GCC 15.3.0]",
+      "sha256": "4e5a21a86416279ff329fdcb418a766f6722f81988a36fbd2f97f00b878497f3"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/freeze_dynamics.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "4e5a21a86416279ff329fdcb418a766f6722f81988a36fbd2f97f00b878497f3"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/freeze_dynamics.json",
+      "json_pointer": "/scipy",
+      "value": "1.18.1",
+      "sha256": "4e5a21a86416279ff329fdcb418a766f6722f81988a36fbd2f97f00b878497f3"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/freeze_dynamics.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "4e5a21a86416279ff329fdcb418a766f6722f81988a36fbd2f97f00b878497f3"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/freeze_dynamics.json",
+      "json_pointer": "/cuda",
+      "value": "13.2",
+      "sha256": "4e5a21a86416279ff329fdcb418a766f6722f81988a36fbd2f97f00b878497f3"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/results/dynamics/run_identity.json",
+      "json_pointer": "/torch",
+      "value": "2.14.0+cu132",
+      "sha256": "c862c36c88cb72af80e15c55841c9d38840428bfbfc0b105bc3d1d110c2e51ed"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/results/dynamics/run_identity.json",
+      "json_pointer": "/numpy",
+      "value": "2.5.3",
+      "sha256": "c862c36c88cb72af80e15c55841c9d38840428bfbfc0b105bc3d1d110c2e51ed"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/results/reliability/run_identity.json",
+      "json_pointer": "/numpy_version",
+      "value": "2.5.3",
+      "sha256": "9830f19bf5e53d348861a16d84feaf61549338ea33d2d2d6ed83a031dcf8dfad"
+    },
+    {
+      "source": "experiments/prior_reliability_v7/results/reliability/run_identity.json",
+      "json_pointer": "/torch_version",
+      "value": "2.14.0+cu132",
+      "sha256": "9830f19bf5e53d348861a16d84feaf61549338ea33d2d2d6ed83a031dcf8dfad"
+    }
+  ],
+  "source_catalog": {
+    "experiments/lee2019_erp_history_v1/pilot_run.py": {
+      "bytes": 10222,
+      "sha256": "4b054cfadd10e32a5319e95a7646f655f0be13ff8b5b0f57f32cfe9324a24c0d"
+    },
+    "experiments/lee2019_erp_history_v1/protocol.json": {
+      "bytes": 12439,
+      "sha256": "d316f746477a7dd601639cfc5250279bc50ca4ae30b4edeb58901304ff5b84a3"
+    },
+    "experiments/lee2019_erp_history_v1/protocol_freeze.json": {
+      "bytes": 398,
+      "sha256": "838f74f5fc5a57885bcf691c8579ef1a672f6df854af1b3293fa2ef9c9fbc824"
+    },
+    "experiments/lee2019_erp_history_v1/execution_freeze.json": {
+      "bytes": 1388,
+      "sha256": "26c980e7b57fe967ff6ae3ba51c8eec217bc78ff4fe9df48c0efc43708f1e1d3"
+    },
+    "experiments/lee2019_erp_history_v1/results/verification_pilot.json": {
+      "bytes": 100935,
+      "sha256": "94626f341a36dbf05e69590810da6c5cceec7f5f6c3a8728ad76574bda5563cb"
+    },
+    "experiments/lee2019_erp_history_v1/run_history.py": {
+      "bytes": 13197,
+      "sha256": "75be57f4af9dff8c63ef113de64b4b0a7b9557496cb518880d7496a1bdb95cfc"
+    },
+    "experiments/lee2019_erp_history_v1/results/verification_history.json": {
+      "bytes": 117203,
+      "sha256": "40799b3831bed52cb7a50b018e72f215aa7f02b787c83b347c9bcb6eeaa942bb"
+    },
+    "experiments/lee2019_erp_diagnostics_v1/run.py": {
+      "bytes": 16442,
+      "sha256": "c288497fdf25fb05b0a783130c0cbbdd03bc18c202596a84a1153b208e308309"
+    },
+    "experiments/lee2019_erp_diagnostics_v1/protocol.json": {
+      "bytes": 4458,
+      "sha256": "83ea645990cc04cffe31655aa417f97118d4395b5293cbe2d1949ae8c5418e00"
+    },
+    "experiments/lee2019_erp_diagnostics_v1/results/verification.json": {
+      "bytes": 32061,
+      "sha256": "f91168f3864ff29c4bc1e4363788d2db067b299a708c3054afe0ce74ee9918ec"
+    },
+    "experiments/yang2025_replication_v1/results/analyzer.executed.py": {
+      "bytes": 15041,
+      "sha256": "71ee90a2dbdc08706dd81c88fdb0887a68354697cdc365ab6eec5a8f809fdf02"
+    },
+    "experiments/yang2025_replication_v1/protocol.json": {
+      "bytes": 14794,
+      "sha256": "c9a02501b3eb015c63535c56814f2140646bd14dc69886e596f12e6a1921a9ee"
+    },
+    "experiments/yang2025_replication_v1/freeze_manifest.json": {
+      "bytes": 304,
+      "sha256": "e48a398760d7f4454e5e3674c20896f138460edc0d3fb0dbaacafb1f505f52b5"
+    },
+    "experiments/yang2025_replication_v1/results/verification/run_verification.json": {
+      "bytes": 52264,
+      "sha256": "0f29e9a9b4401ad72852e77b5cd624eb54e588142e7f3ed502c974cf91d565cb"
+    },
+    "experiments/continual_information_v1/eeg/results/analyzer.executed.py": {
+      "bytes": 12463,
+      "sha256": "05e3224e07c70582c5455b73d623c4be7b3ad3b28135e51f6c3e8a19e55fda00"
+    },
+    "experiments/continual_information_v1/protocol.json": {
+      "bytes": 8620,
+      "sha256": "e90defca4a1a798856aa4385a37cb0ec5ec58fcbbcc168112c73f204124c7584"
+    },
+    "experiments/continual_information_v1/verification/eeg_verification.json": {
+      "bytes": 3678112,
+      "sha256": "455c2fc4eba25a7f614b6ce15ffa3788be0608beab7bd652dd3a8251eaab9b88"
+    },
+    "experiments/information_mechanisms_v2/results/initial_refined/runner.executed.py": {
+      "bytes": 8555,
+      "sha256": "2bf3f7d38ab94e56ecf706e63d436012bf138398896be92d6284308606cd18da"
+    },
+    "experiments/information_mechanisms_v2/protocol.json": {
+      "bytes": 14491,
+      "sha256": "a2c2fd1fe48505b333e1a1935796172d352bd668baecba3410e4c0155631d530"
+    },
+    "experiments/information_mechanisms_v2/freeze_manifest.json": {
+      "bytes": 2444,
+      "sha256": "ecadc54fc360aaa156529dc4a8599519219211de12c8f88b56d44bac51b5f92b"
+    },
+    "experiments/information_mechanisms_v2/results/initial_refined/verification.json": {
+      "bytes": 1246,
+      "sha256": "dec128c68025a1f4524eb283fa3bfb1b632a5ef9c81838a19303d401ed573e39"
+    },
+    "experiments/information_mechanisms_v2/pairing/summarize.py": {
+      "bytes": 6377,
+      "sha256": "89cbd9c665b1878b0681f868520f2a39c175f390d225731c2186590adc899f73"
+    },
+    "experiments/information_mechanisms_v2/results/pairing/verification.json": {
+      "bytes": 20371,
+      "sha256": "a39436e33f594a6c5b029997a1d898bc00b7956105f66344b999051f4041eaa6"
+    },
+    "experiments/information_mechanisms_v2/history/run_history.py": {
+      "bytes": 10485,
+      "sha256": "e11a33286242ff69313d7ce6e378765efabd9021b30e01c800d26b40f4ef0db5"
+    },
+    "experiments/information_mechanisms_v2/results/history/verification.json": {
+      "bytes": 5312,
+      "sha256": "554161a2b5204e6073db23c783ba4e49060e19d8ae09ae669b7d21916a6b42f3"
+    },
+    "experiments/reliability_budget_v1/eeg/analyze.py": {
+      "bytes": 15008,
+      "sha256": "fb8bcbcb6d7632880f6f8254e9dd00f509ecf627ebd9693d288a68ae1f230f99"
+    },
+    "experiments/reliability_budget_v1/eeg/protocol_fragment.json": {
+      "bytes": 4245,
+      "sha256": "5652a0b7164c89a30f5d986e9dde771bcd3685aeffeb845d7e7c349f468e5686"
+    },
+    "experiments/reliability_budget_v1/protocol.json": {
+      "bytes": 23845,
+      "sha256": "7e3d4d7d91474a54898e4befe35c54a1c679f344576b3647517f16a40a021b40"
+    },
+    "experiments/reliability_budget_v1/freeze_manifest.json": {
+      "bytes": 3169,
+      "sha256": "c9e37050860a512f5c9f3c01c49f3f4eeb76a0bcb980d1a46df799ffe8eac566"
+    },
+    "experiments/reliability_budget_v1/verification/eeg_analysis.json": {
+      "bytes": 688,
+      "sha256": "519e32da92ab028327c4fa315b2b598501a2b13f9f79dbd0060f60a6640a4031"
+    },
+    "experiments/reliability_followup_v2/eeg/analyze.py": {
+      "bytes": 12019,
+      "sha256": "726c8f8bd75209aff7e73f2281bd2118af69f967b615e938356593cbc08d2d70"
+    },
+    "experiments/reliability_followup_v2/eeg/protocol_fragment.json": {
+      "bytes": 5374,
+      "sha256": "335f359709e43ab33bb1a31909d8756fc8c11f97b0d9a3eb0114ba4dbe1e335c"
+    },
+    "experiments/reliability_followup_v2/protocol.json": {
+      "bytes": 19722,
+      "sha256": "315390499bbac22f511a498a6bf0c59121fe85f6dc49137fe11a184ff4d905ca"
+    },
+    "experiments/reliability_followup_v2/freeze_manifest.json": {
+      "bytes": 2486,
+      "sha256": "7e186b5d8dfaaebba151f284bd7b532ef63b25bc5432e2de6dad67335332c7e2"
+    },
+    "experiments/reliability_followup_v2/verification/eeg_analysis.json": {
+      "bytes": 647,
+      "sha256": "84cf86eb2af8fff6e84a813ce1c88727ff2bf1cb2f6ce6a4b4eff5abe57addea"
+    },
+    "experiments/feedback_retention_v3/eeg/analyze.py": {
+      "bytes": 15130,
+      "sha256": "2d1e6ea1ff2781eba0c9932eb0d5e47bed15d9c07a7ceaa547859017e510dab6"
+    },
+    "experiments/feedback_retention_v3/eeg/protocol_fragment.json": {
+      "bytes": 7477,
+      "sha256": "7997bf0652c486e7190d4127b6991ff85cf2399498b8e076c1e54ffc61146b35"
+    },
+    "experiments/feedback_retention_v3/protocol.json": {
+      "bytes": 21022,
+      "sha256": "78078e07efa6d6a64592f2b3e63bd0af7a09070ecfa26d72ed37a08db25f669e"
+    },
+    "experiments/feedback_retention_v3/freeze_manifest.json": {
+      "bytes": 4428,
+      "sha256": "191bfb77b88b57f51cc0d609713631a88442ec8f80f4b14b3326bc7af13f6939"
+    },
+    "experiments/feedback_retention_v3/verification/eeg_analysis.json": {
+      "bytes": 5171,
+      "sha256": "276a167a1dd593b37b10d3603e7307f914b2a00888d151f1ec5f380242ad0e52"
+    },
+    "experiments/confirmation_prior_constraints_v4/eeg/analyze.py": {
+      "bytes": 13149,
+      "sha256": "ed1c8eb9978355a509997a1fc062881277c260fe9e595ad278f6c4b1bcb310e3"
+    },
+    "experiments/confirmation_prior_constraints_v4/eeg/PROTOCOL.md": {
+      "bytes": 2885,
+      "sha256": "e19f32351234e96a7923441ca0b41b39ba639ba733d9a16727e613fc439a3305"
+    },
+    "experiments/confirmation_prior_constraints_v4/eeg/protocol_fragment.json": {
+      "bytes": 6030,
+      "sha256": "528e9dc5d8c3b0d319eb74c689fc218e3e400756ff19cef176ccc92c01ee0cc8"
+    },
+    "experiments/confirmation_prior_constraints_v4/freeze_eeg.json": {
+      "bytes": 286827,
+      "sha256": "5a4541acc897e230ffc12e7603297ce54a7643342e27ce04257865548aee1bb3"
+    },
+    "experiments/confirmation_prior_constraints_v4/verification/eeg_analysis.json": {
+      "bytes": 5067,
+      "sha256": "fd8f9bc303627d1781297d26b565a3ae6a35b15984f7de52805bec5edff00a90"
+    },
+    "experiments/confirmation_prior_constraints_v4/confirmation/analyze.py": {
+      "bytes": 7541,
+      "sha256": "87a10bc574687e556e37afdfbafa832f89a9508bfd271226adf60e3f1d18e787"
+    },
+    "experiments/confirmation_prior_constraints_v4/confirmation/protocol_fragment.json": {
+      "bytes": 13209,
+      "sha256": "c8b2faf01c9418d248a8fe4f9a5e3efd553a87fe5ce9f65488d87cb19b665464"
+    },
+    "experiments/confirmation_prior_constraints_v4/freeze_confirmation.json": {
+      "bytes": 15195,
+      "sha256": "1d3f3fa47b82461078d0af9e04aa5c0a60e73d0d9eeed0b829da0bcf54d4836d"
+    },
+    "experiments/confirmation_prior_constraints_v4/verification/confirmation_analysis.json": {
+      "bytes": 794,
+      "sha256": "0309713b612eb4a304ce3733fad3688df1f82513778bac0d7357fe34db60c1a5"
+    },
+    "experiments/diagnostics_generalization_v5/classification/analyze.py": {
+      "bytes": 7026,
+      "sha256": "9488c6100833f480a69db719205d5f738e3272ca08a535b444fe70e3a1159aa1"
+    },
+    "experiments/diagnostics_generalization_v5/classification/protocol_fragment.json": {
+      "bytes": 8453,
+      "sha256": "53701ada25718a3ccbc03c83686b9c61f72d975a66120640feaf3da6b1ef9cab"
+    },
+    "experiments/diagnostics_generalization_v5/freeze_classification.json": {
+      "bytes": 3942,
+      "sha256": "401743f3b7348809d0efcf0164f7b7c9ab60dad0e204e6f95f97dcc14ad51744"
+    },
+    "experiments/diagnostics_generalization_v5/verification/classification_analysis.json": {
+      "bytes": 900,
+      "sha256": "bd9aeb003b5dd2deefe4f967ac2f04c64dbd099e416fdc71c2d0e9820de06245"
+    },
+    "experiments/diagnostics_generalization_v5/retention/analyze.py": {
+      "bytes": 8407,
+      "sha256": "bbdd66ab2c047ce2041fec30061486c4da9a0748797d701e5aaff508de2f1b05"
+    },
+    "experiments/diagnostics_generalization_v5/retention/protocol_fragment.json": {
+      "bytes": 17745,
+      "sha256": "90494a0c62ab46a4a86352642d1719a49012a617101e4c69fbc4604016597b70"
+    },
+    "experiments/diagnostics_generalization_v5/freeze_retention.json": {
+      "bytes": 28457,
+      "sha256": "c5b17f6c7c34a6e79d09d160ccbba606768a8ef990c7fe5c55f0e2b9e4192201"
+    },
+    "experiments/diagnostics_generalization_v5/verification/retention_analysis.json": {
+      "bytes": 1251,
+      "sha256": "e339c6cada8ce96d5fdce39206596b8157b1d4f27d7c1c214b7d79bfc9c12962"
+    },
+    "experiments/closure_controls_v6/classification/analyze.py": {
+      "bytes": 6868,
+      "sha256": "e2c3ccd9dc06041887e3f60f5eccfc26b4a3bf82db9af5c6ae4ca7a83c9401c4"
+    },
+    "experiments/closure_controls_v6/classification/protocol_fragment.json": {
+      "bytes": 6697,
+      "sha256": "db80fce7f981870f36160dc754676874fd12f06dddbdecc1d56503056fbf39b5"
+    },
+    "experiments/closure_controls_v6/freeze_classification.json": {
+      "bytes": 8517,
+      "sha256": "7bbcad995a1b3501796de6eea6c7cec406576a16f4b17577359bba3ecc9c0c21"
+    },
+    "experiments/closure_controls_v6/verification/classification_analysis.json": {
+      "bytes": 1707,
+      "sha256": "1f3976cdb6df054f01469572b843f7d25f8bc98ec3f691221ea854862ace195d"
+    },
+    "experiments/closure_controls_v6/revisions/retention_r2/analyze.py": {
+      "bytes": 11038,
+      "sha256": "9757e0efd896a12473beaf296c26b3a09d81089ea690fd147051ce005ecab55e"
+    },
+    "experiments/closure_controls_v6/revisions/retention_r2/protocol_fragment.json": {
+      "bytes": 9256,
+      "sha256": "8a9cef6fb55eb4da4725adce7740673ab3f7c404913ec0e05d2bbfb5c2fe9a93"
+    },
+    "experiments/closure_controls_v6/freeze_retention_r2.json": {
+      "bytes": 12415,
+      "sha256": "6573bab8d6207db4f27f34a19678b16368b8a59472f3988dfa8253af6c6da493"
+    },
+    "experiments/closure_controls_v6/verification/retention_analysis.json": {
+      "bytes": 1167,
+      "sha256": "84bcf4bb6f7df13e46494f5b06ff21eb837e1529dfa6cf6cd3691a7a0ecfb23d"
+    },
+    "experiments/prior_reliability_v7/reliability/analyze.py": {
+      "bytes": 11287,
+      "sha256": "9a534fe30ca6bd968f8b14406dc71604853f9fade88c39a06aa408f7b824041c"
+    },
+    "experiments/prior_reliability_v7/reliability/protocol_fragment.json": {
+      "bytes": 67991,
+      "sha256": "c0a500933e0e53c62b639f69948c9b135a7da69729da3b8ce5450b91f2a33c93"
+    },
+    "experiments/prior_reliability_v7/freeze_reliability.json": {
+      "bytes": 131535,
+      "sha256": "939b153e1f275ea014de68dfaaee5c8d5bcf5c807fa9c7a122bbf15e18264004"
+    },
+    "experiments/prior_reliability_v7/verification/reliability_analysis.json": {
+      "bytes": 1258,
+      "sha256": "f56d8da32da7bda6b39eb4e17af7e70190caf85c1ceecebfbd8659a7ac84a60c"
+    },
+    "experiments/reliability_budget_v1/results/dynamics/run_identity.json": {
+      "bytes": 644,
+      "sha256": "e72c85df5872827096964c3c657172f145ee34c2f19bc50369c8405d0a8c6426"
+    },
+    "experiments/reliability_budget_v1/dynamics/analyze.py": {
+      "bytes": 19270,
+      "sha256": "1078b4b1fc5a27ac04db54142f7c8777c32a6fd36483ae71b96c6a23c89077a0"
+    },
+    "experiments/reliability_budget_v1/results/dynamics/protocol.executed.json": {
+      "bytes": 9378,
+      "sha256": "c27a8e54e3cfacb9f92a9dca8913e76d4c4757a43b4036b622e96e83da9e8e4a"
+    },
+    "experiments/reliability_budget_v1/verification/dynamics_analysis.json": {
+      "bytes": 652,
+      "sha256": "a252223f5505e408655807fc47ea08477f6421575803a6b06ce33f97c9773b45"
+    },
+    "experiments/reliability_followup_v2/results/dynamics/run_identity.json": {
+      "bytes": 668,
+      "sha256": "9000f0d8722bdf556840d569f967f73e625fcea47eb8a9cf8d5bc98dce6ff584"
+    },
+    "experiments/reliability_followup_v2/dynamics/analyze.py": {
+      "bytes": 15442,
+      "sha256": "b29dd149cd7085f7ba3d445103b7a221d25cd642216ca31a64771097ce65a08e"
+    },
+    "experiments/reliability_followup_v2/results/dynamics/protocol.executed.json": {
+      "bytes": 12293,
+      "sha256": "09e7b4dcef5075c155f180efe0b95967a999740a5c2ae7f7ac44bc80304967e1"
+    },
+    "experiments/reliability_followup_v2/verification/dynamics_analysis.json": {
+      "bytes": 683,
+      "sha256": "2da331e43c92b28b613b48ba812eeb12d41fabfc7672ffa06223d21847d09c12"
+    },
+    "experiments/feedback_retention_v3/results/dynamics/run_identity.json": {
+      "bytes": 917,
+      "sha256": "b685d48cc87c30d7010a1559d9b736c576d3dc99aad637d97c37ced2c538038f"
+    },
+    "experiments/feedback_retention_v3/dynamics/analyze.py": {
+      "bytes": 14382,
+      "sha256": "811b5968ca755e96a72f6cd499478e5e996eaa67ef9182b1df3bfdc7c3d45657"
+    },
+    "experiments/feedback_retention_v3/results/dynamics/protocol.executed.json": {
+      "bytes": 10130,
+      "sha256": "0d5c55885f8a6d01e343b8b1aa1ed289c455ec7127275e748f496ea39b5f9b2a"
+    },
+    "experiments/feedback_retention_v3/verification/dynamics_analysis.json": {
+      "bytes": 3777,
+      "sha256": "051ac72d55b7fc3a3a6ef024e1f4b43946496113e4fa8e13895341d234066e77"
+    },
+    "experiments/confirmation_prior_constraints_v4/results/dynamics/run_identity.json": {
+      "bytes": 1060,
+      "sha256": "0ee1209daf2191b83a77c704c0097fddd6535430431f1cfd2b4ea9bebc1b6da7"
+    },
+    "experiments/confirmation_prior_constraints_v4/dynamics/analyze.py": {
+      "bytes": 14048,
+      "sha256": "53e9258bf8e75cd5e541ecc5a303485de240581ae702f744e7e36e850b75665a"
+    },
+    "experiments/confirmation_prior_constraints_v4/results/dynamics/protocol.executed.json": {
+      "bytes": 14835,
+      "sha256": "ad4609bec7188945418e54d600771830e40268dc6f95b175b3c33bffbe52f00a"
+    },
+    "experiments/confirmation_prior_constraints_v4/freeze_dynamics.json": {
+      "bytes": 288244,
+      "sha256": "0b40d8a3cb84b19c698764b8d9edbe97fdddd180eca6f134e144c422a4b24b22"
+    },
+    "experiments/confirmation_prior_constraints_v4/verification/dynamics_analysis.json": {
+      "bytes": 998,
+      "sha256": "fc365a22827e68f0d5b459a151b6a68d598342a7466a67d3d033180e4a3fe419"
+    },
+    "experiments/diagnostics_generalization_v5/results/dynamics/run_identity.json": {
+      "bytes": 1918,
+      "sha256": "6dfdd20d2b9a815bd0e3edba16807f06050e0cdf2f3cba1bb9a5423d0c8250f9"
+    },
+    "experiments/diagnostics_generalization_v5/dynamics/analyze.py": {
+      "bytes": 11843,
+      "sha256": "e1a9cfc9ad625e21b724d6a24eb8fe2e5499071bb52e30746b3974b7042ee642"
+    },
+    "experiments/diagnostics_generalization_v5/results/dynamics/protocol.executed.json": {
+      "bytes": 12510,
+      "sha256": "4941678e51c26fa42a6a2467fad7a8bfb48e8efafe2d0eb7573f69995b9c1895"
+    },
+    "experiments/diagnostics_generalization_v5/freeze_dynamics.json": {
+      "bytes": 5835,
+      "sha256": "59474ba0596ce20b9b0eac3bb95b9686263f94d404d7fd25328d32738c3c96e8"
+    },
+    "experiments/diagnostics_generalization_v5/verification/dynamics_analysis.json": {
+      "bytes": 1152,
+      "sha256": "dd5c87c83e0c4a53293848c0063e85e69d96c0149e043f45afc3c00dfa22683e"
+    },
+    "experiments/closure_controls_v6/results/dynamics/run_identity.json": {
+      "bytes": 2855,
+      "sha256": "d2943641f78ae5af6d760c51319a3af2d3c2527d71370a62d93df649716e6757"
+    },
+    "experiments/closure_controls_v6/dynamics/analyze.py": {
+      "bytes": 11213,
+      "sha256": "a598df7bfb401f649ace6aea90cb252a2f059e94ca25ae46839eb9b9d2aa4f10"
+    },
+    "experiments/closure_controls_v6/results/dynamics/protocol.executed.json": {
+      "bytes": 31903,
+      "sha256": "892c34a1127e5102b5fd8bc5112414a202a9104403412338ccca780303f91be5"
+    },
+    "experiments/closure_controls_v6/freeze_dynamics.json": {
+      "bytes": 38003,
+      "sha256": "1fd28aa48e5301b99742dffaa66b987498a0a7f0d8e06f1a6601219007e9f674"
+    },
+    "experiments/closure_controls_v6/verification/dynamics_analysis.json": {
+      "bytes": 1253,
+      "sha256": "95ae0b289838d8d796d3e5388eae38bf8b5e52f29fc114400d8989f517f857c8"
+    },
+    "experiments/prior_reliability_v7/results/dynamics/run_identity.json": {
+      "bytes": 1910,
+      "sha256": "c862c36c88cb72af80e15c55841c9d38840428bfbfc0b105bc3d1d110c2e51ed"
+    },
+    "experiments/prior_reliability_v7/dynamics/analyze.py": {
+      "bytes": 11472,
+      "sha256": "4899ad4d251b911a676a62e81ccaddf0982f10b0f79fbf78e816ee0af491c60e"
+    },
+    "experiments/prior_reliability_v7/results/dynamics/protocol.executed.json": {
+      "bytes": 49189,
+      "sha256": "f02c0d612fa7805c5db2c6d2b038f8a8703acc8cb7d13b5143ea673c98d1c532"
+    },
+    "experiments/prior_reliability_v7/freeze_dynamics.json": {
+      "bytes": 21557,
+      "sha256": "4e5a21a86416279ff329fdcb418a766f6722f81988a36fbd2f97f00b878497f3"
+    },
+    "experiments/prior_reliability_v7/verification/dynamics_analysis.json": {
+      "bytes": 1123,
+      "sha256": "e2afe5c25c997324bdcd9983a47c2161f4d6f3acf9003f6290475d48a504ed2c"
+    },
+    "experiments/continual_information_v1/dynamics/config.json": {
+      "bytes": 1045,
+      "sha256": "1946f761cab034501784e64124179e4ac90104d127117472e322fb5fd7e31993"
+    },
+    "experiments/continual_information_v1/dynamics/run_dynamics.py": {
+      "bytes": 30722,
+      "sha256": "d9657974a21dcb25c68e6b6de0c7c2f8c6cf5936176aec8bbf1fc923004f1748"
+    },
+    "experiments/continual_information_v1/verification/dynamics_verification.json": {
+      "bytes": 1695,
+      "sha256": "973da814cbaf6a6efc9ecc9b71f6a5c39930000004734ed6ee4c11ea0685290b"
+    },
+    "experiments/lee2019_erp_pilot/environment.json": {
+      "bytes": 302,
+      "sha256": "909f17f795b7c162a483d7f61441b2199d66d08304c3b1adfdfc7545b9bad5d6"
+    },
+    "experiments/lee2019_erp_diagnostics_v1/environment.json": {
+      "bytes": 293,
+      "sha256": "e4fe9e06fbc2ecc44d97ccba62e7cca8d1745aa39ba5a60eb17515767fd53f49"
+    },
+    "experiments/lee2019_erp_history_v1/data/preparestatus.json": {
+      "bytes": 1549,
+      "sha256": "70cc1747dda1ce91fb4f8c5803322fb47ab9440bbeeaef5178791f9674e08a2d"
+    },
+    "experiments/yang2025_replication_v1/execution_environment_snapshot.json": {
+      "bytes": 1662,
+      "sha256": "dec827a5f1ade281a640e4d6b8b6a47073ea4670f9a40516d5df85a0b1ee92ae"
+    },
+    "experiments/yang2025_replication_v1/results/run_identity.json": {
+      "bytes": 1924,
+      "sha256": "65ce17e007906635697c51d5f637470ad13e891898c216ed79a81dbf1d519976"
+    },
+    "experiments/continual_information_v1/eeg/results/environment.json": {
+      "bytes": 190,
+      "sha256": "083deae8934f507614ebb91d4b18c50e545156a62bdfcdc8c0dd4f7447368f55"
+    },
+    "experiments/information_mechanisms_v2/results/initial_refined/identity.json": {
+      "bytes": 794,
+      "sha256": "cdf2c2a9d5e5421f49f79a8b318f42a7e66d05081d0d967501469bc4cdb22043"
+    },
+    "experiments/information_mechanisms_v2/results/pairing/run_identity.json": {
+      "bytes": 5250,
+      "sha256": "57dc86727cbbb04123fc6de85635a5e2165db1ed893cd2dc65c7942134f435ad"
+    },
+    "experiments/information_mechanisms_v2/results/history/run_identity.json": {
+      "bytes": 806,
+      "sha256": "c07fa5aa361bf956b38658a45681fa92cf45312db4a861513e2fc405a10ecf87"
+    },
+    "experiments/reliability_budget_v1/preflight.json": {
+      "bytes": 142926,
+      "sha256": "42fdee00ff1e39906a63bb7e3ba6326c75c470c595dd5a3785696a49594dfa2d"
+    },
+    "experiments/reliability_budget_v1/results/eeg/run_identity.json": {
+      "bytes": 1142,
+      "sha256": "64b08d3fff11a5710ac08d117bd74d31f534e6e24ce32d7de8eeab4d79b42238"
+    },
+    "experiments/reliability_followup_v2/preflight.json": {
+      "bytes": 169383,
+      "sha256": "137370aa181abe1081c269633ce143aebb79fa41051d777890ae0472aa4dd719"
+    },
+    "experiments/reliability_followup_v2/results/eeg/run_identity.json": {
+      "bytes": 1341,
+      "sha256": "f59d95afcfb5c0fb4fed4aacbdee9e4b9fddb9a0d2c9c3badc116640102c95aa"
+    },
+    "experiments/feedback_retention_v3/preflight.json": {
+      "bytes": 172886,
+      "sha256": "e7ea7c4d072cb0b6d058df6506b80a9107ed7bbae70c08491ad83bc66b67f43e"
+    },
+    "experiments/feedback_retention_v3/results/eeg/run_identity.json": {
+      "bytes": 961,
+      "sha256": "13cb61b0974c90a2ea5cb0f850ba80053d5e20bb352b2c7f2efe868b124bd9ac"
+    },
+    "experiments/closure_controls_v6/freeze_retention.json": {
+      "bytes": 6577,
+      "sha256": "e2475baee330c1eac04ca0dcc0a3b5476ba6820b74e4f297d2860392444653e9"
+    },
+    "experiments/prior_reliability_v7/results/reliability/run_identity.json": {
+      "bytes": 2405,
+      "sha256": "9830f19bf5e53d348861a16d84feaf61549338ea33d2d2d6ed83a031dcf8dfad"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "archive_slug": "low-channel-eeg-adaptation",
+  "version": "v1.0.0",
+  "repository_url": "https://github.com/Yiming-S/low-channel-eeg-adaptation",
+  "release_page_url": "https://github.com/Yiming-S/low-channel-eeg-adaptation/releases/tag/v1.0.0",
+  "publication_state_at_packaging": "prepared",
+  "scope": "Archived-results and primary-statistical reproduction; raw-EEG/model reruns are not executed by the package checks."
+}

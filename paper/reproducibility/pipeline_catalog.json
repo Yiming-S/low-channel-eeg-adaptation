@@ -1,0 +1,193 @@
+{
+  "schema": "experiment_entry_point_catalogue_v1",
+  "scope": "Read-only map from the paper to existing experiment protocols and source entry points; these are not executed by the archived-result figure build.",
+  "execution_environment": {
+    "historical_python": "/home/ys/fast/envs/reve-test/bin/python",
+    "historical_stage_parent": "/home/ys/fast/runs/",
+    "raw_data_and_caches": "Dataset- and stage-specific; resolve the original input manifests. These files are not bundled by this local reproduction entry point."
+  },
+  "pipelines": [
+    {
+      "name": "Stieger frozen REVE features and early controls",
+      "scope": "Raw EEG preprocessing and frozen-feature preparation; subsequent runs use pinned feature caches.",
+      "protocols": [
+        "experiments/reve_stieger2021/README.md",
+        "experiments/reve_stieger2021/CLASSIFICATION_PROTOCOL_V2.md",
+        "experiments/reve_stieger2021/CUMULATIVE_PROTOCOL.md"
+      ],
+      "entry_points": [
+        "experiments/reve_stieger2021/run_frozen_inference.py",
+        "experiments/reve_stieger2021/run_shared_structure_gpu.py",
+        "experiments/reve_stieger2021/run_session_policy_gpu.py"
+      ]
+    },
+    {
+      "name": "Lee ERP original-event and history evaluations",
+      "scope": "Dataset acquisition, event identities, preprocessing, staged feature extraction, original-event and legal-history models.",
+      "protocols": [
+        "experiments/lee2019_erp_history_v1/README.md",
+        "experiments/lee2019_erp_history_v1/protocol.json"
+      ],
+      "entry_points": [
+        "experiments/lee2019_erp_history_v1/prepare.py",
+        "experiments/lee2019_erp_history_v1/pipeline.py",
+        "experiments/lee2019_erp_history_v1/pilot_run.py",
+        "experiments/lee2019_erp_history_v1/run_history.py"
+      ]
+    },
+    {
+      "name": "Yang replication",
+      "scope": "Acquired raw data, frozen features and the replication execution sequence.",
+      "protocols": [
+        "experiments/yang2025_replication_v1/protocol.json"
+      ],
+      "entry_points": [
+        "experiments/yang2025_replication_v1/data/run_after_download.py",
+        "experiments/yang2025_replication_v1/run_after_features.py",
+        "experiments/yang2025_replication_v1/analysis/run_yang.py"
+      ]
+    },
+    {
+      "name": "Continual-information controls",
+      "scope": "Initial-only and feedback controls on verified EEG feature caches.",
+      "protocols": [
+        "experiments/continual_information_v1/protocol.json"
+      ],
+      "entry_points": [
+        "experiments/continual_information_v1/eeg/run_eeg.py"
+      ]
+    },
+    {
+      "name": "Independent information-mechanism controls",
+      "scope": "Separate initial validity, pairing, and history controls.",
+      "protocols": [
+        "experiments/information_mechanisms_v2/protocol.json",
+        "experiments/information_mechanisms_v2/pairing/protocol_fragment.json",
+        "experiments/information_mechanisms_v2/initial/protocol_fragment.json",
+        "experiments/information_mechanisms_v2/history/protocol_fragment.json"
+      ],
+      "entry_points": [
+        "experiments/information_mechanisms_v2/run_all.py",
+        "experiments/information_mechanisms_v2/run_remaining.py",
+        "experiments/information_mechanisms_v2/pairing/run_pairing.py",
+        "experiments/information_mechanisms_v2/initial/run_initial.py",
+        "experiments/information_mechanisms_v2/history/run_history.py"
+      ]
+    },
+    {
+      "name": "Budget and reliability, v1",
+      "scope": "Released-label and anchor budgets; calibrated model-based reliability.",
+      "protocols": [
+        "experiments/reliability_budget_v1/PROTOCOL.md",
+        "experiments/reliability_budget_v1/protocol.json",
+        "experiments/reliability_budget_v1/eeg/protocol_fragment.json",
+        "experiments/reliability_budget_v1/dynamics/protocol_fragment.json"
+      ],
+      "entry_points": [
+        "experiments/reliability_budget_v1/run_study.py",
+        "experiments/reliability_budget_v1/eeg/run_eeg.py",
+        "experiments/reliability_budget_v1/dynamics/run.py"
+      ]
+    },
+    {
+      "name": "Output retention and reliability follow-up, v2",
+      "scope": "Initial-output penalties and updated dynamical-model controls.",
+      "protocols": [
+        "experiments/reliability_followup_v2/PROTOCOL.md",
+        "experiments/reliability_followup_v2/protocol.json",
+        "experiments/reliability_followup_v2/eeg/protocol_fragment.json",
+        "experiments/reliability_followup_v2/dynamics/protocol_fragment.json"
+      ],
+      "entry_points": [
+        "experiments/reliability_followup_v2/manage.py",
+        "experiments/reliability_followup_v2/eeg/run_eeg.py",
+        "experiments/reliability_followup_v2/dynamics/run.py"
+      ]
+    },
+    {
+      "name": "Matched feedback sources and line retention, v3",
+      "scope": "Recipient-matched feedback sources, training-risk line rollback, and model identification.",
+      "protocols": [
+        "experiments/feedback_retention_v3/PROTOCOL.md",
+        "experiments/feedback_retention_v3/protocol.json",
+        "experiments/feedback_retention_v3/eeg/protocol_fragment.json",
+        "experiments/feedback_retention_v3/dynamics/protocol_fragment.json"
+      ],
+      "entry_points": [
+        "experiments/feedback_retention_v3/manage.py",
+        "experiments/feedback_retention_v3/eeg/run_eeg.py",
+        "experiments/feedback_retention_v3/dynamics/run.py"
+      ]
+    },
+    {
+      "name": "Full-space constraints, independent confirmation, and priors, v4",
+      "scope": "Stieger full-space training-risk constraints, Farabbi confirmation and matched/mismatched transition priors.",
+      "protocols": [
+        "experiments/confirmation_prior_constraints_v4/PROTOCOL.md",
+        "experiments/confirmation_prior_constraints_v4/eeg/PROTOCOL.md",
+        "experiments/confirmation_prior_constraints_v4/eeg/protocol_fragment.json",
+        "experiments/confirmation_prior_constraints_v4/confirmation/PROTOCOL.md",
+        "experiments/confirmation_prior_constraints_v4/confirmation/protocol_fragment.json",
+        "experiments/confirmation_prior_constraints_v4/dynamics/PROTOCOL.md",
+        "experiments/confirmation_prior_constraints_v4/dynamics/protocol_fragment.json"
+      ],
+      "entry_points": [
+        "experiments/confirmation_prior_constraints_v4/manage.py",
+        "experiments/confirmation_prior_constraints_v4/eeg/run.py",
+        "experiments/confirmation_prior_constraints_v4/confirmation/run.py",
+        "experiments/confirmation_prior_constraints_v4/dynamics/run.py"
+      ]
+    },
+    {
+      "name": "Diagnostic and generalization controls, v5",
+      "scope": "Classification diagnostics, held-out training retention controls, and particle/parameter-information studies.",
+      "protocols": [
+        "experiments/diagnostics_generalization_v5/PROTOCOL.md",
+        "experiments/diagnostics_generalization_v5/classification/protocol_fragment.json",
+        "experiments/diagnostics_generalization_v5/retention/protocol_fragment.json",
+        "experiments/diagnostics_generalization_v5/dynamics/protocol_fragment.json"
+      ],
+      "entry_points": [
+        "experiments/diagnostics_generalization_v5/manage.py",
+        "experiments/diagnostics_generalization_v5/classification/run.py",
+        "experiments/diagnostics_generalization_v5/retention/run.py",
+        "experiments/diagnostics_generalization_v5/dynamics/run.py"
+      ]
+    },
+    {
+      "name": "Closure controls, v6, including final retention r2",
+      "scope": "Final classification and parameter-information controls; retention_r2 is the final retention revision.",
+      "protocols": [
+        "experiments/closure_controls_v6/PROTOCOL.md",
+        "experiments/closure_controls_v6/classification/protocol_fragment.json",
+        "experiments/closure_controls_v6/dynamics/protocol_fragment.json",
+        "experiments/closure_controls_v6/revisions/retention_r2/PROTOCOL.md",
+        "experiments/closure_controls_v6/revisions/retention_r2/protocol_fragment.json"
+      ],
+      "entry_points": [
+        "experiments/closure_controls_v6/manage.py",
+        "experiments/closure_controls_v6/classification/run.py",
+        "experiments/closure_controls_v6/dynamics/run.py",
+        "experiments/closure_controls_v6/revisions/retention_r2/run.py"
+      ]
+    },
+    {
+      "name": "Prior and correlated reliability references, v7",
+      "scope": "Prior controls and training-only out-of-fold sampling references with fixed archived-result analysis.",
+      "protocols": [
+        "experiments/prior_reliability_v7/PROTOCOL.md",
+        "experiments/prior_reliability_v7/EXECUTION_PROTOCOL.md",
+        "experiments/prior_reliability_v7/protocol.json",
+        "experiments/prior_reliability_v7/dynamics/PROTOCOL.md",
+        "experiments/prior_reliability_v7/dynamics/protocol_fragment.json",
+        "experiments/prior_reliability_v7/reliability/PROTOCOL.md",
+        "experiments/prior_reliability_v7/reliability/protocol_fragment.json"
+      ],
+      "entry_points": [
+        "experiments/prior_reliability_v7/manage.py",
+        "experiments/prior_reliability_v7/dynamics/run.py",
+        "experiments/prior_reliability_v7/reliability/run.py"
+      ]
+    }
+  ]
+}

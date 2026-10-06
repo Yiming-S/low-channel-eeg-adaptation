@@ -1,0 +1,4 @@
+# Tested local rendering environment: CPython 3.10.5.
+# Experimental training has separate stage-specific environments.
+numpy==2.2.6
+matplotlib==3.10.8
