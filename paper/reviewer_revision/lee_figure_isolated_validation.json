@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "scope": "copied files only; no runtime manuscript, existing generator, history inputs or snapshot dependencies",
+  "copied_inputs": 45,
+  "records": 908,
+  "sources": 43,
+  "source_records_identical": true,
+  "panel_arrays_identical": true,
+  "inline_figure_identical": true,
+  "generated_png_and_pdf": true,
+  "command": "python3 paper/reviewer_revision/generate_lee_primary_figure.py",
+  "generator_sha256": "113fea4a123c34e7f9cba607aaa231ffb40e010c5b266ba499093b69e6c39421",
+  "template_sha256": "81a7c8f7079c961e3891c4843b7184c826467a8f7addf74f738cd74e2bbe1e7f",
+  "subprocess_stdout": "{\n  \"status\": \"PASS\",\n  \"records\": 908,\n  \"sources\": 43,\n  \"output\": \"/private/var/folders/hx/jfv6bw_d48j729j33knqbn1m0000gn/T/lee-primary-isolated-510phmvw/paper/reviewer_revision/lee_figure.tex\",\n  \"export\": \"eeg_lee_primary_contrasts\"\n}\n"
+}

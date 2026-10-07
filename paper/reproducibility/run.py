@@ -24,6 +24,7 @@ SCRIPTS = (
     "make_figures.py", "validate_figures.py", "figure_assets_eeg.py",
     "figure_assets_retention.py", "figure_assets_dynamics.py",
     "figure_assets_source.py",
+    "reviewer_revision/generate_lee_primary_figure.py",
 )
 FIGURES = (
     "update_layers", "eeg_budget_calibration", "eeg_pairing_forest",
@@ -31,6 +32,7 @@ FIGURES = (
     "retention_tradeoffs", "dynamics_history_schedules",
     "dynamics_parameter_information", "dynamics_prior_stability",
     "dynamics_reliability_reference",
+    "eeg_lee_primary_contrasts",
 )
 
 

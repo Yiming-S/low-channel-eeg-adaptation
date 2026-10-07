@@ -6,9 +6,11 @@ This repository provides the versioned archived-results package accompanying the
 
 ## Obtain and verify the package
 
-Download the archive, checksum and validation report from [release v1.0.0](https://github.com/Yiming-S/low-channel-eeg-adaptation/releases/tag/v1.0.0). Extract the archive and read `paper/reproducibility/README.md`. Run the documented commands from the extracted package root. The figure build and numerical checks use archived records; a separate independent NumPy script recomputes the principal participant-bootstrap intervals from compact participant endpoints.
+Download the archive, checksum and validation report from [release v1.1.0](https://github.com/Yiming-S/low-channel-eeg-adaptation/releases/tag/v1.1.0). Extract the archive and read `paper/reproducibility/README.md`. Run the documented commands from the extracted package root. The figure build and numerical checks use archived records; a separate independent NumPy script recomputes the principal participant-bootstrap intervals from compact participant endpoints.
 
-The package does not redistribute raw EEG, encoder weights, feature caches, or fitted-model and trial-prediction arrays. Raw EEG acquisition and model fitting require the original dataset distributions and stage-specific inputs recorded in the protocols.
+Version v1.1.0 includes the revised manuscript, the four-panel Lee main figure, participant-level distribution checks, and compact paired-trial inputs for the original Stieger reduced-label old-test comparison. The release verification independently reconstructs the added summaries and tables after extraction outside the research checkout. The original v1.0.0 archive is retained.
+
+Raw EEG, encoder weights, feature caches and full fitted-model/prediction archives remain separate inputs to preprocessing and model fitting. Their acquisition and use follow the original dataset distributions and stage-specific protocols.
 
 ## Data sources
 

@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "baseline_sha256": "e34c3c8293106dec8cfb2e74782ab59141498392ca808c3b747d30a92013844d",
+  "manuscript_sha256": "c0f11d0ff139593697cec3e26dd9f849aadebd27f0ad963a25fe91b5627de95d",
+  "all_13_other_figures_unchanged": true,
+  "all_11_original_tables_unchanged": true,
+  "bibliography_unchanged": true,
+  "original_3_lee_plot_payloads_unchanged": true,
+  "new_figure_exact_generated_block": true,
+  "new_tables_exact_generated_blocks": true,
+  "old_test_descriptive_reconstruction": "all 62 participants and all 1550 paired trials match generated evidence",
+  "participants_with_one_class_n_le_10": 25,
+  "all_9_numbered_or_aligned_math_environments_unchanged": true,
+  "math_environment_counts": {
+    "equation": 6,
+    "align": 2,
+    "align*": 1
+  },
+  "bracketed_display_math_unchanged": true,
+  "abstract_title_authors_unchanged": true,
+  "all_citation_commands_unchanged": true
+}

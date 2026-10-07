@@ -42,11 +42,11 @@ The wrapper verifies the original declared hashes before staging inputs. The val
 
 The required material consists of:
 
-- The six existing Python files listed in `run.py:SCRIPTS` and their NumPy/Matplotlib dependencies.
+- The seven Python files listed in `run.py:SCRIPTS` and their NumPy/Matplotlib dependencies, including the revised Lee generator under `paper/reviewer_revision/`.
 - The current standalone `paper/manuscript.tex` source, `paper/evidence_manifest.json`, `paper/figure_source_manifest.json`, all `paper/*evidence.json`, and current `paper/figures/*figure_data.json` catalogues.
 - Every original archived result and text source referenced by those records/manifests, at the same relative path.
 - The files in `paper/reproducibility/` and the small protocol/entry-point files in `pipeline_catalog.json`, which provide the local package inventory.
-- For the `check` action, the existing 11 PNG/PDF pairs. The `build` action replaces these only inside its isolated output tree.
+- For the `check` action, the existing 12 PNG/PDF pairs. The `build` action replaces these only inside its isolated output tree.
 
 The input manifest distinguishes execution sources, evidence documents, archived evidence sources, source manifests, discovery catalogues, current exports, and pipeline files retained only for inspection. Current figure-data catalogues are used to discover participant-level source files, even when their corresponding figure-data JSON is regenerated during a build.
 

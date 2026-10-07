@@ -1,0 +1,25 @@
+{
+  "status": "pass",
+  "manuscript_sha256": "cddc70642c52c045e1bb71d4859b4d5985acb653439ab9c97efce6dce13f7651",
+  "native_compile": {
+    "status": "success",
+    "scope": "Revised standalone .tex compiled with the desktop editor compiler; no separate manuscript PDF was created."
+  },
+  "bibliography": {
+    "entries": 37,
+    "new_verified_keys": [
+      "ramakrishnan2016",
+      "duan2024"
+    ],
+    "new_source_checks": 2,
+    "historical_reference_checks": "Existing 35-reference audits preserved; not repeated in this completion round."
+  },
+  "changes": [
+    "Specific empirical contribution and control roles strengthened",
+    "Repeated scope explanations removed while primary statistical results and comparison references retained",
+    "Held-out endpoint wording and frozen-mapping AUC reference corrected",
+    "Current release reference updated to v1.1.0 with paired-trial and descriptive reproduction"
+  ],
+  "verification_scope": "Current manuscript source, preserved figures/tables/math/citations, original-value and source-hash checks, and native compilation; current portable-package and upload checks are recorded separately.",
+  "completed_utc": "2026-10-07T04:07:39.775236+00:00"
+}
